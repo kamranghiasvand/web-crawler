@@ -73,13 +73,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CrawlerAgent.cs" />
     <Compile Include="Migrations\201801201114314_1st.cs" />
     <Compile Include="Migrations\201801201114314_1st.Designer.cs">
       <DependentUpon>201801201114314_1st.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201801231544494_2nd.cs" />
+    <Compile Include="Migrations\201801231544494_2nd.Designer.cs">
+      <DependentUpon>201801231544494_2nd.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Data.cs" />
     <Compile Include="Model\DbContext.cs" />
+    <Compile Include="Model\Xpath.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -92,6 +98,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201801201114314_1st.resx">
       <DependentUpon>201801201114314_1st.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801231544494_2nd.resx">
+      <DependentUpon>201801231544494_2nd.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
