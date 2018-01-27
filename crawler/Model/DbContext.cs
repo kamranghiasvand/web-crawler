@@ -15,6 +15,6 @@ namespace crawler.Model
 
 
 
-        public DbSet<Data> Datas { get; set; }
+        public DbSet<Site> Sites { get; set; }
     }
 }

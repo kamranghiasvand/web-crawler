@@ -85,7 +85,8 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Data.cs" />
     <Compile Include="Model\DbContext.cs" />
-    <Compile Include="Model\Xpath.cs" />
+    <Compile Include="Model\Site.cs" />
+    <Compile Include="Model\Verification.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
