@@ -12,10 +12,7 @@ namespace crawler.Model
         [Key]
         public long Id { get; set; }
         public string BaseUrl { get; set; }
-        public virtual ICollection<Verification> Verifications { get; set; } = new List<Verification>();
-        public virtual ICollection<Page> AvaileblePages { get; set; } = new List<Page>();
-        public virtual ICollection<string> SeenPages { get; set; } = new List<string>();
-
-
+        public virtual ICollection<Page> Pages { get; set; } = new List<Page>();
+        public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
     }
 }

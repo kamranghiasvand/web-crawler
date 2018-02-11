@@ -16,8 +16,8 @@ namespace crawler
 
         static void Main(string[] args)
         {
-         
-         
+
+
             PoliteWebCrawler crawler = new PoliteWebCrawler();
             crawler.PageCrawlStartingAsync += crawler_ProcessPageCrawlStarting;
             crawler.PageCrawlCompletedAsync += crawler_ProcessPageCrawlCompleted;
@@ -38,7 +38,7 @@ namespace crawler
         static void crawler_ProcessPageCrawlCompleted(object sender, PageCrawlCompletedArgs e)
         {
             CrawledPage crawledPage = e.CrawledPage;
-           
+
             if (crawledPage.WebException != null || crawledPage.HttpWebResponse.StatusCode != HttpStatusCode.OK)
                 Console.WriteLine("Crawl of page failed {0}", crawledPage.Uri.AbsoluteUri);
             else
@@ -47,10 +47,10 @@ namespace crawler
                     Console.WriteLine("Page had no content {0}", crawledPage.Uri.AbsoluteUri);
                 else
                 {
-                    dbContext.Datas.Add(new Data() { Text = crawledPage.Content.Text, Url = crawledPage.Uri.ToString() });
+                    //dbContext.Sites.Add(new Site() { Text = crawledPage.Content.Text, Url = crawledPage.Uri.ToString() });
                     dbContext.SaveChanges();
                 }
-            }       
+            }
 
             //var htmlAgilityPackDocument = crawledPage.HtmlDocument; //Html Agility Pack parser
             //var angleSharpHtmlDocument = crawledPage.AngleSharpHtmlDocument; //AngleSharp parser

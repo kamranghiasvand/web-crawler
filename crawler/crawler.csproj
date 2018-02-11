@@ -73,6 +73,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration.cs" />
     <Compile Include="CrawlerAgent.cs" />
     <Compile Include="Migrations\201801201114314_1st.cs" />
     <Compile Include="Migrations\201801201114314_1st.Designer.cs">
@@ -82,11 +83,16 @@
     <Compile Include="Migrations\201801231544494_2nd.Designer.cs">
       <DependentUpon>201801231544494_2nd.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201802111911379_3d.cs" />
+    <Compile Include="Migrations\201802111911379_3d.Designer.cs">
+      <DependentUpon>201802111911379_3d.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Model\Data.cs" />
+    <Compile Include="Model\Category.cs" />
+    <Compile Include="Model\Page.cs" />
     <Compile Include="Model\DbContext.cs" />
+    <Compile Include="Model\Filter.cs" />
     <Compile Include="Model\Site.cs" />
-    <Compile Include="Model\Verification.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -102,6 +108,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201801231544494_2nd.resx">
       <DependentUpon>201801231544494_2nd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802111911379_3d.resx">
+      <DependentUpon>201802111911379_3d.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

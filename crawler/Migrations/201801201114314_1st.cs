@@ -2,7 +2,7 @@ namespace crawler.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class _1st : DbMigration
     {
         public override void Up()
@@ -16,9 +16,9 @@ namespace crawler.Migrations
                         Text = c.String(),
                     })
                 .PrimaryKey(t => t.Id);
-            
+
         }
-        
+
         public override void Down()
         {
             DropTable("dbo.Data");

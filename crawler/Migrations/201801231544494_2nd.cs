@@ -2,7 +2,7 @@ namespace crawler.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class _2nd : DbMigration
     {
         public override void Up()
@@ -10,7 +10,7 @@ namespace crawler.Migrations
             AddColumn("dbo.Data", "CrawledSucess", c => c.Boolean(nullable: false));
             AddColumn("dbo.Data", "Parsed", c => c.Boolean(nullable: false));
         }
-        
+
         public override void Down()
         {
             DropColumn("dbo.Data", "Parsed");
