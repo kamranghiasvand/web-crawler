@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace crawler.Model
 {
@@ -14,5 +10,6 @@ namespace crawler.Model
         public string BaseUrl { get; set; }
         public virtual ICollection<Page> Pages { get; set; } = new List<Page>();
         public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
+        public string OutputFolder { get; set; }
     }
 }

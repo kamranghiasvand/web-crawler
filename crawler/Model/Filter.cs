@@ -9,6 +9,7 @@ namespace crawler.Model
         public string Name { get; set; }
         public string XPath { get; set; }
         public ValueType Type { get; set; }
+        public virtual Category Category { get; set; }
     }
     public enum ValueType
     {

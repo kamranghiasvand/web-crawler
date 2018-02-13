@@ -73,8 +73,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\CrawlerAgent.cs" />
+    <Compile Include="Business\ICrawlerAgent.cs" />
+    <Compile Include="Business\ICrawlerManager.cs" />
     <Compile Include="Configuration.cs" />
-    <Compile Include="CrawlerAgent.cs" />
+    <Compile Include="Business\CrawlerManager.cs" />
     <Compile Include="Migrations\201801201114314_1st.cs" />
     <Compile Include="Migrations\201801201114314_1st.Designer.cs">
       <DependentUpon>201801201114314_1st.cs</DependentUpon>
@@ -86,6 +89,10 @@
     <Compile Include="Migrations\201802111911379_3d.cs" />
     <Compile Include="Migrations\201802111911379_3d.Designer.cs">
       <DependentUpon>201802111911379_3d.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802131610524_4th.cs" />
+    <Compile Include="Migrations\201802131610524_4th.Designer.cs">
+      <DependentUpon>201802131610524_4th.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Category.cs" />
@@ -100,6 +107,7 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="log4net.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -111,6 +119,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201802111911379_3d.resx">
       <DependentUpon>201802111911379_3d.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802131610524_4th.resx">
+      <DependentUpon>201802131610524_4th.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

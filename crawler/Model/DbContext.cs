@@ -12,9 +12,7 @@ namespace crawler.Model
         public ApplicationDbContext():base("DefaultConnection")
         {
         }
-
-
-
         public DbSet<Site> Sites { get; set; }
+        public DbSet<Filter> Filters { get; set; }
     }
 }
