@@ -9,23 +9,23 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace crawler.Business
+namespace crawler.Business.Crawling
 {
     public class CrawlerAgent : ICrawlerAgent
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(CrawlerAgent));
-        private readonly ApplicationDbContext dbContext;
-        private readonly Site site;
+        private ApplicationDbContext dbContext;
+        private Site site;
         private readonly string guid;
         private CrawlerX agent;
         private bool isRunning;
+        private ICrawlerManager manager;
+        private bool init;
 
-        public event Func<string, string, Task> PageCrawled;
+        public event Func<Site, Page,string, Task> PageCrawled;
 
-        public CrawlerAgent(ApplicationDbContext context, Site site)
+        public CrawlerAgent()
         {
-            dbContext = context;
-            this.site = dbContext.Sites.Attach(site);
             guid = Guid.NewGuid().ToString();
             log.Debug($"Crawler agent with id {guid} was created");
 
@@ -33,10 +33,20 @@ namespace crawler.Business
 
         public string GetId()
         {
+            if (!init)
+                throw new AgetNotInitializedException();
             return guid;
+        }
+        public string GetBaseUrl()
+        {
+            if (!init)
+                throw new AgetNotInitializedException();
+            return site.BaseUrl;
         }
         public void Start()
         {
+            if (!init)
+                throw new AgetNotInitializedException();
             lock (this)
             {
                 log.Debug($"Starting crawler with id {guid}");
@@ -45,20 +55,61 @@ namespace crawler.Business
                     log.Info($"Crawler with id {guid} is already started");
                     return;
                 }
+                log.Debug($"Initializing CrawlerX");
                 isRunning = true;
                 agent = new CrawlerX();
                 agent.PageCrawlCompletedAsync += Agent_PageCrawlCompleted;
                 agent.PageLinksCrawlDisallowedAsync += Agent_PageLinksCrawlDisallowed;
                 agent.ShouldCrawlPage(ShouldCrawlPage);
+
                 (new Thread(() =>
                 {
+                    log.Debug("Trying to start CrawlX");
                     agent.Crawl(new Uri(site.BaseUrl));
-                    lock(this)  isRunning = false;
+                    log.Info("Crawling is done");
+                    lock (this) isRunning = false;
+                    log.Debug("Calling manager");
+                    manager.Done(this);
 
                 })).Start();
             }
 
         }
+        public void Stop()
+        {
+            if (!init)
+                throw new AgetNotInitializedException();
+            lock (this)
+            {
+                if (!isRunning)
+                    return;
+                agent.Stop(true);
+                isRunning = false;
+            }
+        }
+        public bool IsRunning()
+        {
+            if (!init)
+                throw new AgetNotInitializedException();
+            return isRunning;
+        }
+
+        public void Init(ApplicationDbContext context, ICrawlerManager manager, Site site)
+        {
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+            if (site == null)
+                throw new ArgumentNullException(nameof(site));
+            dbContext = context;
+            this.site = dbContext.Sites.Attach(site);
+            if (manager == null)
+                throw new AgetNotInitializedException();
+            this.manager = manager;
+            init = true;
+            log.Debug("CrawlerAgent initialized");
+        }
+
+
         private CrawlDecision ShouldCrawlPage(PageToCrawl page, CrawlContext context)
         {
             if (site.Pages.FirstOrDefault(item => item.Address == page.Uri.ToString()) != null)
@@ -71,7 +122,9 @@ namespace crawler.Business
             var page = site.Pages.FirstOrDefault(item => item.Address == e.CrawledPage.Uri.ToString());
             if (page == null)
             {
+                log.Debug("Page not found in DB. Creating new page");
                 site.Pages.Add(new Page { Address = e.CrawledPage.Uri.ToString(), IsSuccess = false, SeeTime = DateTime.Now, Text = "" });
+                dbContext.SaveChanges();
             }
             else
             {
@@ -83,11 +136,13 @@ namespace crawler.Business
         }
         private void Agent_PageCrawlCompleted(object sender, PageCrawlCompletedArgs e)
         {
+            log.Info($"Page {e.CrawledPage.Uri} crawled.");
             var crawledPage = e.CrawledPage;
             var page = site.Pages.FirstOrDefault(item => item.Address == e.CrawledPage.Uri.ToString());
             var find = false;
             if (page == null)
             {
+                log.Info("Page not found in DB. Creating new page");
                 page = new Page
                 {
                     Address = e.CrawledPage.Uri.ToString(),
@@ -97,6 +152,7 @@ namespace crawler.Business
             }
             else
             {
+                log.Info($"Page found in Db with id {page.Id}");
                 find = true;
             }
             page.SeeTime = DateTime.Now;
@@ -121,22 +177,10 @@ namespace crawler.Business
             dbContext.SaveChanges();
             if (!string.IsNullOrEmpty(page.Text))
             {
-                (new Thread(() => { PageCrawled?.Invoke(page.Address, page.Text); })).Start();
+                log.Debug("Invoking PageCrawled event");
+                (new Thread(() => { PageCrawled?.Invoke(site,page, page.Text); })).Start();
             }
         }
-        public void Stop()
-        {
-            lock (this)
-            {
-                if (!isRunning)
-                    return;
-                agent.Stop(true);
-                isRunning = false;
-            }
-        }
-        public bool IsRunning()
-        {
-            return isRunning;
-        }
+
     }
 }

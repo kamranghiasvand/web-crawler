@@ -1,6 +1,7 @@
 ﻿using Abot.Crawler;
 using Abot.Poco;
 using crawler.Model;
+using log4net.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace crawler
 
         static void Main(string[] args)
         {
-
+            XmlConfigurator.Configure();
 
             var crawler = new PoliteWebCrawler();
             crawler.PageCrawlStartingAsync += crawler_ProcessPageCrawlStarting;

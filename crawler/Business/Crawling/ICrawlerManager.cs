@@ -5,14 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace crawler.Business
+namespace crawler.Business.Crawling
 {
-    public interface ICrawlerAgent
+    public interface ICrawlerManager
     {
+        void Init(ApplicationDbContext context);
+        void Done(ICrawlerAgent agent);
         void Start();
         void Stop();
-        string GetId();
-        bool IsRunning();
-        event Func<string,string,Task> PageCrawled;
+        void AddNewSite(Site site);
     }
 }
