@@ -1,4 +1,5 @@
-﻿using System;
+﻿using crawler.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,5 +12,7 @@ namespace crawler.Business
         void Start();
         void Stop();
         string GetId();
+        bool IsRunning();
+        event Func<string,string,Task> PageCrawled;
     }
 }

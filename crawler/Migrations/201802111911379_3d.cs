@@ -2,7 +2,7 @@ namespace crawler.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class _3d : DbMigration
     {
         public override void Up()
@@ -15,7 +15,7 @@ namespace crawler.Migrations
                         BaseUrl = c.String(),
                     })
                 .PrimaryKey(t => t.Id);
-            
+
             CreateTable(
                 "dbo.Categories",
                 c => new
@@ -27,7 +27,7 @@ namespace crawler.Migrations
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Sites", t => t.Site_Id)
                 .Index(t => t.Site_Id);
-            
+
             CreateTable(
                 "dbo.Filters",
                 c => new
@@ -41,7 +41,7 @@ namespace crawler.Migrations
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Categories", t => t.Category_Id)
                 .Index(t => t.Category_Id);
-            
+
             CreateTable(
                 "dbo.Page",
                 c => new
@@ -56,10 +56,10 @@ namespace crawler.Migrations
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Sites", t => t.Site_Id)
                 .Index(t => t.Site_Id);
-            
+
             DropTable("dbo.Data");
         }
-        
+
         public override void Down()
         {
             CreateTable(
@@ -73,7 +73,7 @@ namespace crawler.Migrations
                         Parsed = c.Boolean(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
-            
+
             DropForeignKey("dbo.Page", "Site_Id", "dbo.Sites");
             DropForeignKey("dbo.Categories", "Site_Id", "dbo.Sites");
             DropForeignKey("dbo.Filters", "Category_Id", "dbo.Categories");

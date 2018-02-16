@@ -18,7 +18,7 @@ namespace crawler
         {
 
 
-            PoliteWebCrawler crawler = new PoliteWebCrawler();
+            var crawler = new PoliteWebCrawler();
             crawler.PageCrawlStartingAsync += crawler_ProcessPageCrawlStarting;
             crawler.PageCrawlCompletedAsync += crawler_ProcessPageCrawlCompleted;
             crawler.PageCrawlDisallowedAsync += crawler_PageCrawlDisallowed;
@@ -31,13 +31,13 @@ namespace crawler
         }
         static void crawler_ProcessPageCrawlStarting(object sender, PageCrawlStartingArgs e)
         {
-            PageToCrawl pageToCrawl = e.PageToCrawl;
+            var pageToCrawl = e.PageToCrawl;
             Console.WriteLine("About to crawl link {0} which was found on page {1}", pageToCrawl.Uri.AbsoluteUri, pageToCrawl.ParentUri.AbsoluteUri);
         }
 
         static void crawler_ProcessPageCrawlCompleted(object sender, PageCrawlCompletedArgs e)
         {
-            CrawledPage crawledPage = e.CrawledPage;
+            var crawledPage = e.CrawledPage;
 
             if (crawledPage.WebException != null || crawledPage.HttpWebResponse.StatusCode != HttpStatusCode.OK)
                 Console.WriteLine("Crawl of page failed {0}", crawledPage.Uri.AbsoluteUri);
@@ -58,13 +58,13 @@ namespace crawler
 
         static void crawler_PageLinksCrawlDisallowed(object sender, PageLinksCrawlDisallowedArgs e)
         {
-            CrawledPage crawledPage = e.CrawledPage;
+            var crawledPage = e.CrawledPage;
             Console.WriteLine("Did not crawl the links on page {0} due to {1}", crawledPage.Uri.AbsoluteUri, e.DisallowedReason);
         }
 
         static void crawler_PageCrawlDisallowed(object sender, PageCrawlDisallowedArgs e)
         {
-            PageToCrawl pageToCrawl = e.PageToCrawl;
+            var pageToCrawl = e.PageToCrawl;
             Console.WriteLine("Did not crawl page {0} due to {1}", pageToCrawl.Uri.AbsoluteUri, e.DisallowedReason);
         }
     }
