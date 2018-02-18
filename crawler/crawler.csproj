@@ -95,6 +95,7 @@
     <Compile Include="Business\Matching\IMatcher.cs" />
     <Compile Include="Business\Matching\IMatcherManager.cs" />
     <Compile Include="Business\Matching\Matcher.cs" />
+    <Compile Include="Business\Storing\IStore.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Business\Crawling\CrawlerManager.cs" />
     <Compile Include="Migrations\201801201114314_1st.cs" />
@@ -116,6 +117,10 @@
     <Compile Include="Migrations\201802162046363_5th.cs" />
     <Compile Include="Migrations\201802162046363_5th.Designer.cs">
       <DependentUpon>201802162046363_5th.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802181425008_6th.cs" />
+    <Compile Include="Migrations\201802181425008_6th.Designer.cs">
+      <DependentUpon>201802181425008_6th.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Category.cs" />
@@ -148,6 +153,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201802162046363_5th.resx">
       <DependentUpon>201802162046363_5th.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802181425008_6th.resx">
+      <DependentUpon>201802181425008_6th.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

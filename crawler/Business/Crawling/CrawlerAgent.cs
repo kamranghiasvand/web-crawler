@@ -120,6 +120,9 @@ namespace crawler.Business.Crawling
         {
             log.Warn($"Page {e.CrawledPage.Uri} is Disallowed cause {e.DisallowedReason}");
             var page = site.Pages.FirstOrDefault(item => item.Address == e.CrawledPage.Uri.ToString());
+            var sendNotification = false;
+            if (e.DisallowedReason == "Already Crawled")
+                sendNotification = true;
             if (page == null)
             {
                 log.Debug("Page not found in DB. Creating new page");
@@ -133,6 +136,8 @@ namespace crawler.Business.Crawling
                 dbContext.Entry(page).State = EntityState.Modified;
                 dbContext.SaveChanges();
             }
+            if (sendNotification)
+                CallPageCrawledEvent(site, page);
         }
         private void Agent_PageCrawlCompleted(object sender, PageCrawlCompletedArgs e)
         {
@@ -175,10 +180,14 @@ namespace crawler.Business.Crawling
             else
                 site.Pages.Add(page);
             dbContext.SaveChanges();
+            CallPageCrawledEvent(site, page);
+        }
+        private void CallPageCrawledEvent(Site site,Page page)
+        {
             if (!string.IsNullOrEmpty(page.Text))
             {
                 log.Debug("Invoking PageCrawled event");
-                (new Thread(() => { PageCrawled?.Invoke(site,page, page.Text); })).Start();
+                (new Thread(() => { PageCrawled?.Invoke(site, page, page.Text); })).Start();
             }
         }
 
