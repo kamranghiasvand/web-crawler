@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-namespace Crawler.Business.Storing
+namespace Crawler.Business
 {
-    public interface IStore
+    public class Engine 
     {
     }
 }

@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace crawler.Model
+namespace Crawler.Model
 {
     public class Category
     {

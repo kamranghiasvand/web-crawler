@@ -1,4 +1,4 @@
-namespace crawler.Migrations
+namespace Crawler.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;

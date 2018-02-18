@@ -1,11 +1,11 @@
-﻿using crawler.Model;
+﻿using Crawler.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace crawler.Business.Matching
+namespace Crawler.Business.Matching
 {
     public interface IMatcherManager
     {

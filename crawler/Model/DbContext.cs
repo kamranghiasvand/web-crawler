@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace crawler.Model
+namespace Crawler.Model
 {
     public class ApplicationDbContext : DbContext
     {

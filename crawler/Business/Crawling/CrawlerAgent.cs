@@ -1,7 +1,7 @@
 ﻿using Abot.Crawler;
 using Abot.Poco;
 using AbotX.Crawler;
-using crawler.Model;
+using Crawler.Model;
 using System;
 using System.Data.Entity;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace crawler.Business.Crawling
+namespace Crawler.Business.Crawling
 {
     public class CrawlerAgent : ICrawlerAgent
     {
@@ -30,7 +30,6 @@ namespace crawler.Business.Crawling
             log.Debug($"Crawler agent with id {guid} was created");
 
         }
-
         public string GetId()
         {
             if (!init)
@@ -190,6 +189,6 @@ namespace crawler.Business.Crawling
                 (new Thread(() => { PageCrawled?.Invoke(site, page, page.Text); })).Start();
             }
         }
-
+        
     }
 }

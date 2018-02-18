@@ -7,8 +7,8 @@
     <ProjectGuid>{94FA645C-DC8B-4759-A088-676D201F1B8F}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>crawler</RootNamespace>
-    <AssemblyName>crawler</AssemblyName>
+    <RootNamespace>Crawler</RootNamespace>
+    <AssemblyName>Crawler</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -92,6 +92,7 @@
     <Compile Include="Business\Crawling\CrawlerAgent.cs" />
     <Compile Include="Business\Crawling\ICrawlerAgent.cs" />
     <Compile Include="Business\Crawling\ICrawlerManager.cs" />
+    <Compile Include="Business\Engine.cs" />
     <Compile Include="Business\Matching\IMatcher.cs" />
     <Compile Include="Business\Matching\IMatcherManager.cs" />
     <Compile Include="Business\Matching\Matcher.cs" />

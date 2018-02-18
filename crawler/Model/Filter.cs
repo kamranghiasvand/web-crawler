@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace crawler.Model
+namespace Crawler.Model
 {
     public class Filter
     {

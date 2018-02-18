@@ -1,12 +1,12 @@
 ﻿using System;
-using crawler.Business.Crawling;
-using crawler.Model;
+using Crawler.Business.Crawling;
+using Crawler.Model;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace crawler.Business.Matching
+namespace Crawler.Business.Matching
 {
     public class Matcher : IMatcher
     {

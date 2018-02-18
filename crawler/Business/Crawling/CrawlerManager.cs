@@ -1,12 +1,12 @@
 ﻿using Abot.Crawler;
-using crawler.Business;
-using crawler.Model;
+using Crawler.Business;
+using Crawler.Model;
 using log4net.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace crawler.Business.Crawling
+namespace Crawler.Business.Crawling
 {
     public class CrawlerManager:ICrawlerManager
     {

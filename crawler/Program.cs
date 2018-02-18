@@ -1,6 +1,6 @@
 ﻿using Abot.Crawler;
 using Abot.Poco;
-using crawler.Model;
+using Crawler.Model;
 using log4net.Config;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace crawler
+namespace Crawler
 {
     class Program
     {

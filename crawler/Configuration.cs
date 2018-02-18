@@ -1,4 +1,4 @@
-﻿namespace crawler
+﻿namespace Crawler
 {
     public class Configuration
     {
