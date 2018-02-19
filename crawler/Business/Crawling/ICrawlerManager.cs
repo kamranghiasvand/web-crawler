@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 namespace Crawler.Business.Crawling
 {
     public interface ICrawlerManager
-    {
-        void Init(ApplicationDbContext context);
+    {      
         void Done(ICrawlerAgent agent);
         void Start();
         void Stop();

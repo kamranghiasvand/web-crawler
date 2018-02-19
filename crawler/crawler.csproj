@@ -46,6 +46,10 @@
       <HintPath>..\packages\AngleSharp.0.9.9.1\lib\net45\AngleSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="CsvHelper, Version=6.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
+      <HintPath>..\packages\CsvHelper.6.1.1\lib\net45\CsvHelper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -96,9 +100,9 @@
     <Compile Include="Business\Matching\IMatcher.cs" />
     <Compile Include="Business\Matching\IMatcherManager.cs" />
     <Compile Include="Business\Matching\Matcher.cs" />
-    <Compile Include="Business\Storing\IStore.cs" />
-    <Compile Include="Configuration.cs" />
-    <Compile Include="Business\Crawling\CrawlerManager.cs" />
+    <Compile Include="Business\Storing\IStoreAgent.cs" />
+    <Compile Include="Business\Storing\List.cs" />
+    <Compile Include="Business\Storing\StoreAgent.cs" />
     <Compile Include="Migrations\201801201114314_1st.cs" />
     <Compile Include="Migrations\201801201114314_1st.Designer.cs">
       <DependentUpon>201801201114314_1st.cs</DependentUpon>
@@ -123,8 +127,13 @@
     <Compile Include="Migrations\201802181425008_6th.Designer.cs">
       <DependentUpon>201802181425008_6th.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201802191413076_7th.cs" />
+    <Compile Include="Migrations\201802191413076_7th.Designer.cs">
+      <DependentUpon>201802191413076_7th.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Category.cs" />
+    <Compile Include="Model\DynamicTypeBuilder.cs" />
     <Compile Include="Model\Page.cs" />
     <Compile Include="Model\DbContext.cs" />
     <Compile Include="Model\Filter.cs" />
@@ -157,6 +166,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201802181425008_6th.resx">
       <DependentUpon>201802181425008_6th.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802191413076_7th.resx">
+      <DependentUpon>201802191413076_7th.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

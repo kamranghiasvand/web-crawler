@@ -11,5 +11,6 @@ namespace Crawler.Model
         public virtual ICollection<Page> Pages { get; set; } = new List<Page>();
         public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
         public string OutputFolder { get; set; }
+        public string Name { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace Crawler.Model
         [Column(TypeName = "VARCHAR")]
         [StringLength(400)]
         public string Name { get; set; }
-        public virtual ICollection<Filter> Filters { get; set; }
+        public virtual ICollection<Filter> Filters { get; set; } = new List<Filter>();
         public virtual Site site { get; set; }
     }
 }
