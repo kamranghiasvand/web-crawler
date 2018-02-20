@@ -11,7 +11,7 @@ namespace Crawler.Business.Matching
     public interface IMatcher
     {
         void Init(ApplicationDbContext context, ICrawlerAgent agent,IMatcherManager manager);
-        string GetId();       
+        string GetId();
     }
 
     public class MatcherNotInitializedException : Exception

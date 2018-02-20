@@ -14,14 +14,14 @@ namespace Crawler.Model
         }
         public static Type CompileResultType(string typeSignature, IDictionary<string, Type> fileds)
         {
-            TypeBuilder tb = GetTypeBuilder(typeSignature);
-            ConstructorBuilder constructor = tb.DefineDefaultConstructor(MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName);
+            var tb = GetTypeBuilder(typeSignature);
+            var constructor = tb.DefineDefaultConstructor(MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName);
 
             // NOTE: assuming your list contains Field objects with fields FieldName(string) and FieldType(Type)
             foreach (var field in fileds)
                 CreateProperty(tb, field.Key, field.Value);
 
-            Type objectType = tb.CreateType();
+            var objectType = tb.CreateType();
             return objectType;
         }
 
@@ -29,9 +29,9 @@ namespace Crawler.Model
         {
             //var typeSignature = "MyDynamicType";
             var an = new AssemblyName(typeSignature);
-            AssemblyBuilder assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(an, AssemblyBuilderAccess.Run);
-            ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("MainModule");
-            TypeBuilder tb = moduleBuilder.DefineType(typeSignature,
+            var assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(an, AssemblyBuilderAccess.Run);
+            var moduleBuilder = assemblyBuilder.DefineDynamicModule("MainModule");
+            var tb = moduleBuilder.DefineType(typeSignature,
                     TypeAttributes.Public |
                     TypeAttributes.Class |
                     TypeAttributes.AutoClass |
@@ -44,26 +44,26 @@ namespace Crawler.Model
 
         private static void CreateProperty(TypeBuilder tb, string propertyName, Type propertyType)
         {
-            FieldBuilder fieldBuilder = tb.DefineField("_" + propertyName, propertyType, FieldAttributes.Private);
+            var fieldBuilder = tb.DefineField("_" + propertyName, propertyType, FieldAttributes.Private);
 
-            PropertyBuilder propertyBuilder = tb.DefineProperty(propertyName, PropertyAttributes.HasDefault, propertyType, null);
-            MethodBuilder getPropMthdBldr = tb.DefineMethod("get_" + propertyName, MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, propertyType, Type.EmptyTypes);
-            ILGenerator getIl = getPropMthdBldr.GetILGenerator();
+            var propertyBuilder = tb.DefineProperty(propertyName, PropertyAttributes.HasDefault, propertyType, null);
+            var getPropMthdBldr = tb.DefineMethod("get_" + propertyName, MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, propertyType, Type.EmptyTypes);
+            var getIl = getPropMthdBldr.GetILGenerator();
 
             getIl.Emit(OpCodes.Ldarg_0);
             getIl.Emit(OpCodes.Ldfld, fieldBuilder);
             getIl.Emit(OpCodes.Ret);
 
-            MethodBuilder setPropMthdBldr =
+            var setPropMthdBldr =
                 tb.DefineMethod("set_" + propertyName,
                   MethodAttributes.Public |
                   MethodAttributes.SpecialName |
                   MethodAttributes.HideBySig,
                   null, new[] { propertyType });
 
-            ILGenerator setIl = setPropMthdBldr.GetILGenerator();
-            Label modifyProperty = setIl.DefineLabel();
-            Label exitSet = setIl.DefineLabel();
+            var setIl = setPropMthdBldr.GetILGenerator();
+            var modifyProperty = setIl.DefineLabel();
+            var exitSet = setIl.DefineLabel();
 
             setIl.MarkLabel(modifyProperty);
             setIl.Emit(OpCodes.Ldarg_0);

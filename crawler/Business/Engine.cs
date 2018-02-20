@@ -8,71 +8,80 @@ using System.Text;
 using System.Threading.Tasks;
 namespace Crawler.Business
 {
-    public class Engine :ICrawlerManager, IMatcherManager
+    public class Engine
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(Engine));
         private ApplicationDbContext context;
-    
-        #region ICrawlerManager
-        private readonly Dictionary<string, ICrawlerAgent> agents = new Dictionary<string, ICrawlerAgent>();
+        private List<SiteProcessor> processors = new List<SiteProcessor>();
+        private bool isRunning;
         public Engine(ApplicationDbContext context)
         {
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
             this.context = context;
         }
-
-        public void AddNewSite(Site site)
-        {
-            log.Debug("Adding New site");
-            context.Sites.Attach(site);
-            if (site == null)
-                throw new ArgumentNullException(nameof(site));
-            var agent = agents.Values.FirstOrDefault(m => m.GetBaseUrl() == site.BaseUrl);
-            if (agent == null)
-            {
-                log.Debug("Site not found in current dictionary");
-                agent = new CrawlerAgent();
-                agent.Init(context, this, site);
-                agents.Add(agent.GetId(), agent);
-
-            }
-            else
-                log.Debug("site found in current dictionary");
-            agent.Start();
-        }
-
-        public void Done(ICrawlerAgent agent)
-        {
-
-        }  
-
         public void Start()
         {
-            log.Debug("starting CrawlerManager");
-            foreach (var item in context.Sites)
+            if(isRunning)
             {
-                ICrawlerAgent agent = new CrawlerAgent();
-                agent.Init(context, this, item);
-                agents.Add(agent.GetId(), agent);
-                agent.Start();
+                log.Warn("Engine is already started");
+                return;
             }
-
-
+            isRunning = true;
+         
+                try
+                {
+                    foreach (var site in context.Sites)
+                    {
+                        log.Debug($"Creating processor for site {site.Name} || {site.BaseUrl}");
+                        var proc = new SiteProcessor(context, site);
+                        processors.Add(proc);
+                        proc.Start();
+                    }
+                }
+                catch(Exception ex)
+                {
+                    log.Fatal(ex.Message,ex);
+                }
         }
         public void Stop()
         {
-            log.Debug("Stopping CrawlerManager");
-            foreach (var item in agents.Values)
-                item.Stop();
+            if(!isRunning)
+            {
+                log.Warn("Engine is already stopped");
+                return;
+            }
+            isRunning = false;
         }
-        #endregion
 
-        #region IMatcherManager
-        public void MatchFound(IMatcher matcher, Category category, Dictionary<string, string> record)
-        {
-            throw new NotImplementedException();
-        }
-        #endregion
+        //public void AddNewSite(Site site)
+        //{
+        //    if (site == null)
+        //        throw new ArgumentNullException(nameof(site));
+        //    log.Debug("Adding New site");
+        //    if (context.Sites.FirstOrDefault(m => m.BaseUrl == site.BaseUrl) == null)
+        //    {
+        //        log.Debug("Adding Site to database");
+        //        context.Sites.Add(site);
+        //        context.SaveChanges();
+        //    }
+        //    else
+        //        context.Sites.Attach(site);
+
+        //    var agent = agents.Values.FirstOrDefault(m => m.GetBaseUrl() == site.BaseUrl);
+        //    if (agent == null)
+        //    {
+        //        log.Debug("no agent for site found in current dictionary. Creating new one");
+        //        agent = new CrawlerAgent();
+        //        agent.Init(context, this, site);
+        //        agents.Add(agent.GetId(), agent);
+
+        //    }
+        //    else
+        //        log.Debug("agent for site found in current dictionary");
+
+        //    agent.Start();
+        //}
+       
     }
 }

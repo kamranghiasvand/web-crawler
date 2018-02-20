@@ -9,6 +9,6 @@ namespace Crawler.Business.Matching
 {
     public interface IMatcherManager
     {
-        void MatchFound(IMatcher matcher, Category category, Dictionary<string, string> record);     
+        void MatchFound(IMatcher matcher, Category category, Dictionary<string, string> record);
     }
 }

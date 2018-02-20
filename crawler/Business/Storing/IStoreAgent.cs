@@ -11,9 +11,10 @@ namespace Crawler.Business.Storing
     {
         void Init(ApplicationDbContext context, Category category, string basePath);
         void Store(Dictionary<string, string> record);
+        void Close();
     }
     public class StoreNotInitializedException : Exception {
         public StoreNotInitializedException() : base() { }
         public StoreNotInitializedException(string message) : base(message) { }
-    }   
+    }
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using HtmlAgilityPack;
 using System.Collections.Generic;
 using System.Threading;
+using System.Text;
 
 namespace Crawler.Business.Matching
 {
@@ -19,8 +20,10 @@ namespace Crawler.Business.Matching
         public Matcher()
         {
             guid = Guid.NewGuid().ToString();
+            log.Info($"Matcher with id {guid} created");
         }
-        public string GetId() { return guid; }
+        public string GetId() => guid;
+
         public void Init(ApplicationDbContext context, ICrawlerAgent agent, IMatcherManager manager)
         {
             log.Debug("Initializing Matcher");
@@ -54,8 +57,7 @@ namespace Crawler.Business.Matching
                 {
                     log.Warn("Page content is empty");
                     return;
-                }
-                context.Sites.Attach(site);
+                }               
                 var html = new HtmlDocument();
                 html.LoadHtml(text);
                 if (site.Categories.Count <= 0)
@@ -66,7 +68,7 @@ namespace Crawler.Business.Matching
                 foreach (var cat in site.Categories)
                 {
                     log.Debug($"Trying check category with id {cat.Id}");
-                    var record = new Dictionary<string, string>();
+                 
                     if (cat.Filters.Count <= 0)
                     {
                         AddIdToCategoriesList(page, cat.Id);
@@ -74,35 +76,7 @@ namespace Crawler.Business.Matching
                         continue;
                     }
                     #region Check Filter
-                    foreach (var filter in cat.Filters)
-                    {
-                        log.Debug($"Trying filter with id {filter.Id}");
-                        if (string.IsNullOrEmpty(filter.XPath))
-                        {
-                            log.Warn("Filter has no XPath");
-                            continue;
-                        }
-                        var node = html.DocumentNode.SelectSingleNode(filter.XPath);
-                        if (node != null)
-                        {
-                            log.Debug("node found");
-                            if (filter.Location == Location.Attribute)
-                            {
-                                var attr = node.Attributes[filter.Name];
-                                log.Debug($"Found value  [{attr.Value}] for filter with id {filter.Id}");
-                                record.Add(filter.OutName, attr.Value);
-                            }
-                            else if (filter.Location == Location.InnerText)
-                            {
-                                log.Debug($"Found value  [{node.InnerHtml}]  for filter with id {filter.Id}");
-                                record.Add(filter.OutName, node.InnerText);
-                            }
-                        }
-                        else
-                        {
-                            log.Debug($"node not found");
-                        }
-                    }
+                    var record = CheckFilters(html,cat);
                     #endregion
                     AddIdToCategoriesList(page, cat.Id);
                     LogRecord(record);
@@ -110,6 +84,40 @@ namespace Crawler.Business.Matching
                     log.Debug($"Done check category with id {cat.Id}");
                 }
             });
+        }
+        private static Dictionary<string,string> CheckFilters(HtmlDocument html , Category cat)
+        {
+            var record = new Dictionary<string, string>();
+            foreach (var filter in cat.Filters)
+            {
+                log.Debug($"Trying filter with id {filter.Id}");
+                if (string.IsNullOrEmpty(filter.XPath))
+                {
+                    log.Warn("Filter has no XPath");
+                    continue;
+                }
+                var node = html.DocumentNode.SelectSingleNode(filter.XPath);
+                if (node != null)
+                {
+                    log.Debug("node found");
+                    if (filter.Location == Location.Attribute)
+                    {
+                        var attr = node.Attributes[filter.Name];
+                        log.Debug($"Found value  [{attr.Value}] for filter with id {filter.Id}");
+                        record.Add(filter.OutName, attr.Value);
+                    }
+                    else if (filter.Location == Location.InnerText)
+                    {
+                        log.Debug($"Found value  [{node.InnerHtml}]  for filter with id {filter.Id}");
+                        record.Add(filter.OutName, node.InnerText);
+                    }
+                }
+                else
+                {
+                    log.Debug($"node not found");
+                }
+            }
+            return record;
         }
         private void AddIdToCategoriesList(Page page, long catId)
         {
@@ -120,7 +128,7 @@ namespace Crawler.Business.Matching
             page.CategoriesId.Add(catId);
             context.Entry(page).State = System.Data.Entity.EntityState.Modified;
         }
-        private void LogRecord(Dictionary<string, string> record)
+        private static void LogRecord(Dictionary<string, string> record)
         {
             if (record == null)
             {
@@ -129,8 +137,11 @@ namespace Crawler.Business.Matching
             }
             log.Debug($"record has {record.Count} element");
             var str = "[";
+            var builder = new StringBuilder();
+            builder.Append(str);
             foreach (var item in record)
-                str += "{" + item.Key + "," + item.Value + "},";
+                builder.Append("{" + item.Key + "," + item.Value + "},");
+            str = builder.ToString();
             str = str.Substring(0, str.Length - 1) + "]";
             log.Info(str);
         }
@@ -139,7 +150,7 @@ namespace Crawler.Business.Matching
             if (record == null || record.Count == 0)
                 return;
             log.Debug("Calling Manager MatchFound");
-            (new Thread(() => { manager?.MatchFound(this,cat,record); })).Start();
+            (new Thread(() => { manager?.MatchFound(this, cat, record); })).Start();
 
         }
     }

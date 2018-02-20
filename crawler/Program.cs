@@ -1,17 +1,12 @@
-﻿using Abot.Crawler;
-using Abot.Poco;
+﻿using AbotX.Crawler;
+using Crawler.Business;
 using Crawler.Business.Storing;
 using Crawler.Model;
-using CsvHelper;
 using log4net.Config;
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Crawler
 {
@@ -22,30 +17,58 @@ namespace Crawler
 
         static void Main(string[] args)
         {
+            var log = log4net.LogManager.GetLogger(typeof(Program));
 
-            //Category cat = null;
-            //Site site = null;
-            //ApplicationDbContext context = new ApplicationDbContext();
-            //site = context.Sites.FirstOrDefault(m => m.Name == "test");
-            //if (site == null)
-            //{
-            //    cat = new Category
-            //    {
-            //        Name = "Cat1"
-            //    };
-            //    cat.Filters.Add(new Filter { Name = "a", OutName = "a", XPath = "asd\asd", Location = Location.Attribute, Type = Model.ValueType.txt });
-            //    cat.Filters.Add(new Filter { Name = "b", OutName = "b", XPath = "asd\asd", Location = Location.Attribute, Type = Model.ValueType.txt });
+            log.Debug("Starting Application");
+            Category cat = null;
+            Site site = null;
+            var context = new ApplicationDbContext();
+            site = context.Sites.FirstOrDefault(m => m.Name == "Rokoland");
+            if (site == null)
+            {
+                cat = new Category
+                {
+                    Name = "Rokoland_IceCream"
 
-            //    site = new Site { BaseUrl = "http://localhost/", OutputFolder = Directory.GetCurrentDirectory(), Name = "test" };
-            //    site.Categories.Add(cat);
-            //    context.Sites.Add(site);
-            //    context.SaveChanges();
-            //}
-            //else
-            //{
-            //    cat = site.Categories.FirstOrDefault();
-            //}
-        
+                };
+                var filter = new Filter
+                {
+                    Location = Location.InnerText,
+                    Name = "h1",
+                    XPath = "//*[@id=\"product-details-form\"]/div/div[1]/div[2]/div[1]/h1",
+                    OutName = "Detail",
+                    Type = Model.ValueType.txt
+                };
+                cat.Filters.Add(filter);
+
+                filter = new Filter
+                {
+                    Location = Location.Attribute,
+                    Name = "content",
+                    OutName = "Price",
+                    Type = Model.ValueType.txt,
+                    XPath = "//*[@id=\"product-details-form\"]/div/div[1]/div[2]/div[5]/div/span"
+                };
+                cat.Filters.Add(filter);
+
+                filter = new Filter
+                {
+                    Location = Location.Attribute,
+                    Name = "src",
+                    OutName = "Image",
+                    Type = Model.ValueType.txt,
+                    XPath = "//*[@id=\"product-details-form\"]/div/div[1]/div[1]/div/img"
+                };
+                cat.Filters.Add(filter);
+
+                site = new Site { BaseUrl = "http://www.rocoland.com/", OutputFolder = Directory.GetCurrentDirectory() + "/rokoland", Name = "Rokoland" };
+                site.Categories.Add(cat);
+                context.Sites.Add(site);
+                context.SaveChanges();
+            }
+            var engine = new Engine(context);
+            engine.Start();
+
         }
     }
 
@@ -55,46 +78,7 @@ namespace Crawler
         public string LineText { get; set; }
     }
 
-    /// <summary>
-    /// Class to write data to a CSV file
-    /// </summary>
-    public class CsvFileWriter : StreamWriter
-    {
-        public CsvFileWriter(Stream stream)
-            : base(stream)
-        {
-        }
 
-        public CsvFileWriter(string filename)
-            : base(filename)
-        {
-        }
-
-        /// <summary>
-        /// Writes a single row to a CSV file.
-        /// </summary>
-        /// <param name="row">The row to be written</param>
-        public void WriteRow(CsvRow row)
-        {
-            StringBuilder builder = new StringBuilder();
-            bool firstColumn = true;
-            foreach (string value in row)
-            {
-                // Add separator if this isn't the first value
-                if (!firstColumn)
-                    builder.Append(',');
-                // Implement special handling for values that contain comma or quote
-                // Enclose in quotes and double up any double quotes
-                if (value.IndexOfAny(new char[] { '"', ',' }) != -1)
-                    builder.AppendFormat("\"{0}\"", value.Replace("\"", "\"\""));
-                else
-                    builder.Append(value);
-                firstColumn = false;
-            }
-            row.LineText = builder.ToString();
-            WriteLine(row.LineText);
-        }
-    }
 
     /// <summary>
     /// Class to read data from a CSV file
@@ -122,8 +106,8 @@ namespace Crawler
             if (String.IsNullOrEmpty(row.LineText))
                 return false;
 
-            int pos = 0;
-            int rows = 0;
+            var pos = 0;
+            var rows = 0;
 
             while (pos < row.LineText.Length)
             {
@@ -136,7 +120,7 @@ namespace Crawler
                     pos++;
 
                     // Parse quoted value
-                    int start = pos;
+                    var start = pos;
                     while (pos < row.LineText.Length)
                     {
                         // Test for quote character
@@ -161,7 +145,7 @@ namespace Crawler
                 else
                 {
                     // Parse unquoted value
-                    int start = pos;
+                    var start = pos;
                     while (pos < row.LineText.Length && row.LineText[pos] != ',')
                         pos++;
                     value = row.LineText.Substring(start, pos - start);
