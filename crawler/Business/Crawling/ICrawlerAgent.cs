@@ -1,4 +1,5 @@
-﻿using Crawler.Model;
+﻿using Abot.Poco;
+using Crawler.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,8 +16,9 @@ namespace Crawler.Business.Crawling
         string GetId();
         bool IsRunning();
         string GetBaseUrl();
-        event Func<Site,Page,string,Task> PageCrawled;
+        event Func<Site,Page,string, CrawledPage,Task> PageCrawled;
     }
+    [Serializable]
     public class AgetNotInitializedException : Exception {
         public AgetNotInitializedException() : base() { }
         public AgetNotInitializedException(string message) : base(message) { }

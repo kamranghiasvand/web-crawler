@@ -13,7 +13,7 @@ namespace Crawler.Business.Matching
         void Init(ApplicationDbContext context, ICrawlerAgent agent,IMatcherManager manager);
         string GetId();
     }
-
+    [Serializable]
     public class MatcherNotInitializedException : Exception
     {
         public MatcherNotInitializedException() : base() { }

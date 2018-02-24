@@ -52,6 +52,8 @@ namespace Crawler.Business
                 return;
             }
             isRunning = false;
+            foreach (var proc in processors)
+                proc.Stop();
         }
 
         //public void AddNewSite(Site site)

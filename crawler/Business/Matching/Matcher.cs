@@ -6,6 +6,7 @@ using HtmlAgilityPack;
 using System.Collections.Generic;
 using System.Threading;
 using System.Text;
+using Abot.Poco;
 
 namespace Crawler.Business.Matching
 {
@@ -41,7 +42,7 @@ namespace Crawler.Business.Matching
             init = true;
         }
 
-        private Task Agent_PageCrawledAsync(Site site, Page page, string text)
+        private Task Agent_PageCrawledAsync(Site site, Page page, string text,CrawledPage crawledPage)
         {
             if (!init)
                 throw new MatcherNotInitializedException();
@@ -49,7 +50,8 @@ namespace Crawler.Business.Matching
                 throw new ArgumentNullException(nameof(site));
             if (page == null)
                 throw new ArgumentNullException(nameof(page));
-
+            if (crawledPage == null)
+                throw new ArgumentNullException(nameof(crawledPage));
             return Task.Run(() =>
             {
                 log.Debug($"Trying to find Match from {page.Address}");
@@ -57,9 +59,8 @@ namespace Crawler.Business.Matching
                 {
                     log.Warn("Page content is empty");
                     return;
-                }               
-                var html = new HtmlDocument();
-                html.LoadHtml(text);
+                }              
+             
                 if (site.Categories.Count <= 0)
                 {
                     log.Warn("Site definition has no category");
@@ -76,7 +77,7 @@ namespace Crawler.Business.Matching
                         continue;
                     }
                     #region Check Filter
-                    var record = CheckFilters(html,cat);
+                    var record = CheckFilters(crawledPage,cat);
                     #endregion
                     AddIdToCategoriesList(page, cat.Id);
                     LogRecord(record);
@@ -85,36 +86,43 @@ namespace Crawler.Business.Matching
                 }
             });
         }
-        private static Dictionary<string,string> CheckFilters(HtmlDocument html , Category cat)
-        {
+        private static Dictionary<string,string> CheckFilters(CrawledPage page , Category cat)
+        {            
             var record = new Dictionary<string, string>();
             foreach (var filter in cat.Filters)
             {
-                log.Debug($"Trying filter with id {filter.Id}");
-                if (string.IsNullOrEmpty(filter.XPath))
+                try
                 {
-                    log.Warn("Filter has no XPath");
-                    continue;
-                }
-                var node = html.DocumentNode.SelectSingleNode(filter.XPath);
-                if (node != null)
-                {
-                    log.Debug("node found");
-                    if (filter.Location == Location.Attribute)
+                    log.Debug($"Trying filter with id {filter.Id}");
+                    if (string.IsNullOrEmpty(filter.XPath))
                     {
-                        var attr = node.Attributes[filter.Name];
-                        log.Debug($"Found value  [{attr.Value}] for filter with id {filter.Id}");
-                        record.Add(filter.OutName, attr.Value);
+                        log.Warn("Filter has no XPath");
+                        continue;
                     }
-                    else if (filter.Location == Location.InnerText)
+                    var node = page.AngleSharpHtmlDocument.QuerySelector(filter.XPath);
+                    if (node != null)
                     {
-                        log.Debug($"Found value  [{node.InnerHtml}]  for filter with id {filter.Id}");
-                        record.Add(filter.OutName, node.InnerText);
+                        log.Debug("node found");
+                        if (filter.Location == Location.Attribute)
+                        {
+                            var attr = node.Attributes[filter.Name];
+                            log.Debug($"Found value  [{attr.Value}] for filter with id {filter.Id}");
+                            record.Add(filter.OutName, attr.Value);
+                        }
+                        else if (filter.Location == Location.InnerText)
+                        {
+                            log.Debug($"Found value  [{node.InnerHtml}]  for filter with id {filter.Id}");
+                            record.Add(filter.OutName, node.InnerHtml);
+                        }
+                    }
+                    else
+                    {
+                        log.Debug($"node not found");
                     }
                 }
-                else
+                catch(Exception ex)
                 {
-                    log.Debug($"node not found");
+                    log.Error(ex.Message, ex);
                 }
             }
             return record;
@@ -135,8 +143,13 @@ namespace Crawler.Business.Matching
                 log.Warn("Record is null");
                 return;
             }
+            if(record.Count==0)
+            {
+                log.Info("Record not found in page");
+                return;
+            }            
             log.Debug($"record has {record.Count} element");
-            var str = "[";
+            var str = "Record found in page: [";
             var builder = new StringBuilder();
             builder.Append(str);
             foreach (var item in record)

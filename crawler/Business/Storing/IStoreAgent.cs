@@ -13,6 +13,7 @@ namespace Crawler.Business.Storing
         void Store(Dictionary<string, string> record);
         void Close();
     }
+    [Serializable]
     public class StoreNotInitializedException : Exception {
         public StoreNotInitializedException() : base() { }
         public StoreNotInitializedException(string message) : base(message) { }

@@ -1,4 +1,5 @@
-﻿using AbotX.Crawler;
+﻿using Abot.Poco;
+using AbotX.Crawler;
 using Crawler.Business;
 using Crawler.Business.Storing;
 using Crawler.Model;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace Crawler
 {
@@ -35,7 +37,7 @@ namespace Crawler
                 {
                     Location = Location.InnerText,
                     Name = "h1",
-                    XPath = "//*[@id=\"product-details-form\"]/div/div[1]/div[2]/div[1]/h1",
+                    XPath = "//*[@id=\"product-details-form\"]/div/div[1]/div[2]/div[1]/h1",                   
                     OutName = "Detail",
                     Type = Model.ValueType.txt
                 };
@@ -49,6 +51,7 @@ namespace Crawler
                     Type = Model.ValueType.txt,
                     XPath = "//*[@id=\"product-details-form\"]/div/div[1]/div[2]/div[5]/div/span"
                 };
+             
                 cat.Filters.Add(filter);
 
                 filter = new Filter
@@ -68,7 +71,9 @@ namespace Crawler
             }
             var engine = new Engine(context);
             engine.Start();
-
+            //Thread.Sleep(1 * 60 * 1000);
+            //engine.Stop();
+            Console.ReadKey();
         }
     }
 
