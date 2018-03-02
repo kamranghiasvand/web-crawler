@@ -1,18 +1,45 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace Crawler.Model
 {
     public class Category
     {
+        public virtual ICollection<Filter> Criteria { get; set; } = new List<Filter>();
+        public virtual ICollection<Filter> Filters { get; set; } = new List<Filter>();
         [Key]
         public long Id { get; set; }
-        [Index(IsUnique =true)]
+        [Index(IsUnique = true)]
         [Column(TypeName = "VARCHAR")]
         [StringLength(400)]
         public string Name { get; set; }
-        public virtual ICollection<Filter> Filters { get; set; } = new List<Filter>();
+        [JsonIgnore]
         public virtual Site site { get; set; }
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+                return false;
+            var other = (Category)obj;
+            if (Filters.Count != other.Filters.Count)
+                return false;
+            if (Criteria.Count != other.Criteria.Count)
+                return false;
+            foreach (var filter in Filters)
+                if (other.Filters.FirstOrDefault(m => m.Equals(filter)) == null)
+                    return false;
+            foreach (var filter in Criteria)
+                if (other.Criteria.FirstOrDefault(m => m.Equals(filter)) == null)
+                    return false;
+            if (!Name.Equals(other.Name))
+                return false;
+            return true;
+        }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode()+Name.GetHashCode();
+        }
     }
 }

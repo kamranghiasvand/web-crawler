@@ -42,7 +42,7 @@ namespace Crawler.Business.Matching
             init = true;
         }
 
-        private Task Agent_PageCrawledAsync(Site site, Page page, string text,CrawledPage crawledPage)
+        private Task Agent_PageCrawledAsync(Site site, Page page, string text, CrawledPage crawledPage)
         {
             if (!init)
                 throw new MatcherNotInitializedException();
@@ -59,8 +59,8 @@ namespace Crawler.Business.Matching
                 {
                     log.Warn("Page content is empty");
                     return;
-                }              
-             
+                }
+
                 if (site.Categories.Count <= 0)
                 {
                     log.Warn("Site definition has no category");
@@ -69,16 +69,21 @@ namespace Crawler.Business.Matching
                 foreach (var cat in site.Categories)
                 {
                     log.Debug($"Trying check category with id {cat.Id}");
-                 
+
                     if (cat.Filters.Count <= 0)
                     {
                         AddIdToCategoriesList(page, cat.Id);
                         log.Warn($"Category with id {cat.Id} definition has no filter");
                         continue;
                     }
-                    #region Check Filter
-                    var record = CheckFilters(crawledPage,cat);
+                    var record = new Dictionary<string, string>();
+
+                    #region Check Filter and Criteria
+
+                    if (CheckCriteria(crawledPage, cat))
+                        record = CheckFilters(crawledPage, cat);
                     #endregion
+
                     AddIdToCategoriesList(page, cat.Id);
                     LogRecord(record);
                     CallRecordFound(cat, record);
@@ -86,20 +91,77 @@ namespace Crawler.Business.Matching
                 }
             });
         }
-        private static Dictionary<string,string> CheckFilters(CrawledPage page , Category cat)
-        {            
+        private static bool CheckCriteria(CrawledPage page, Category cat)
+        {
+            if (cat.Criteria.Count <= 0)
+            {
+                log.Warn($"category with id {cat.Id} has no criteria.");
+                return false;
+            }
+            foreach (var cri in cat.Criteria)
+            {
+                try
+                {
+                    log.Debug($"Trying criteria with id {cri.Id}");
+                    if (string.IsNullOrEmpty(cri.Selector))
+                    {
+                        log.Warn($"Filter with id {cri.Id} has no selector.");
+                        return false;
+                    }
+                    var node = page.AngleSharpHtmlDocument.QuerySelector(cri.Selector);
+                    if (node != null)
+                    {
+                        log.Debug("node found");
+                        if (cri.Location == Location.Attribute)
+                        {
+                            var attr = node.Attributes[cri.Name];
+                            log.Debug($"Found value  [{attr.Value}] for criteria with id {cri.Id}");
+                            if (attr.Value != cri.OutName)
+                            {
+                                log.Debug($"attribute with value [{attr.Value}] not match with criteria id {cri.Id}");
+                                return false;
+                            }
+                        }
+                        else if (cri.Location == Location.InnerText)
+                        {
+                            log.Debug($"Found value  [{node.InnerHtml}]  for criteria with id {cri.Id}");
+                            if (node.InnerHtml != cri.OutName)
+                            {
+                                log.Debug($"node with innerHtml [{node.InnerHtml}] not match with criteria id {cri.Id}");
+                                return false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        log.Debug($"node not found");
+                        return false;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    log.Error(ex.Message, ex);
+                    return false;
+                }
+
+            }
+            return true;
+        }
+        private static Dictionary<string, string> CheckFilters(CrawledPage page, Category cat)
+        {
             var record = new Dictionary<string, string>();
+
             foreach (var filter in cat.Filters)
             {
                 try
                 {
                     log.Debug($"Trying filter with id {filter.Id}");
-                    if (string.IsNullOrEmpty(filter.XPath))
+                    if (string.IsNullOrEmpty(filter.Selector))
                     {
-                        log.Warn("Filter has no XPath");
+                        log.Warn($"Filter with id {filter.Id} has no selector.");
                         continue;
                     }
-                    var node = page.AngleSharpHtmlDocument.QuerySelector(filter.XPath);
+                    var node = page.AngleSharpHtmlDocument.QuerySelector(filter.Selector);
                     if (node != null)
                     {
                         log.Debug("node found");
@@ -120,7 +182,7 @@ namespace Crawler.Business.Matching
                         log.Debug($"node not found");
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     log.Error(ex.Message, ex);
                 }
@@ -143,11 +205,11 @@ namespace Crawler.Business.Matching
                 log.Warn("Record is null");
                 return;
             }
-            if(record.Count==0)
+            if (record.Count == 0)
             {
                 log.Info("Record not found in page");
                 return;
-            }            
+            }
             log.Debug($"record has {record.Count} element");
             var str = "Record found in page: [";
             var builder = new StringBuilder();

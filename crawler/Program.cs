@@ -20,59 +20,10 @@ namespace Crawler
         static void Main(string[] args)
         {
             var log = log4net.LogManager.GetLogger(typeof(Program));
-
-            log.Debug("Starting Application");
-            Category cat = null;
-            Site site = null;
-            var context = new ApplicationDbContext();
-            site = context.Sites.FirstOrDefault(m => m.Name == "Rokoland");
-            if (site == null)
-            {
-                cat = new Category
-                {
-                    Name = "Rokoland_IceCream"
-
-                };
-                var filter = new Filter
-                {
-                    Location = Location.InnerText,
-                    Name = "h1",
-                    XPath = "//*[@id=\"product-details-form\"]/div/div[1]/div[2]/div[1]/h1",                   
-                    OutName = "Detail",
-                    Type = Model.ValueType.txt
-                };
-                cat.Filters.Add(filter);
-
-                filter = new Filter
-                {
-                    Location = Location.Attribute,
-                    Name = "content",
-                    OutName = "Price",
-                    Type = Model.ValueType.txt,
-                    XPath = "//*[@id=\"product-details-form\"]/div/div[1]/div[2]/div[5]/div/span"
-                };
-             
-                cat.Filters.Add(filter);
-
-                filter = new Filter
-                {
-                    Location = Location.Attribute,
-                    Name = "src",
-                    OutName = "Image",
-                    Type = Model.ValueType.txt,
-                    XPath = "//*[@id=\"product-details-form\"]/div/div[1]/div[1]/div/img"
-                };
-                cat.Filters.Add(filter);
-
-                site = new Site { BaseUrl = "http://www.rocoland.com/", OutputFolder = Directory.GetCurrentDirectory() + "/rokoland", Name = "Rokoland" };
-                site.Categories.Add(cat);
-                context.Sites.Add(site);
-                context.SaveChanges();
-            }
+            log.Debug("Starting Application");         
+            var context = new ApplicationDbContext();           
             var engine = new Engine(context);
-            engine.Start();
-            //Thread.Sleep(1 * 60 * 1000);
-            //engine.Stop();
+            engine.Start();         
             Console.ReadKey();
         }
     }

@@ -68,7 +68,10 @@ namespace Crawler.Business.Storing
             {
                 var value = "";
                 if (record.TryGetValue(field, out value))
+                {
+                    value = value.Replace('\r', ' ').Replace('\n',' ');
                     row.Add(value);
+                }
                 else
                     row.Add(" ");
             }

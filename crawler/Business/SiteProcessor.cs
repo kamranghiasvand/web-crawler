@@ -28,6 +28,10 @@ namespace Crawler.Business
             this.context = context;
             this.site = site;
         }
+        public string GetBaseUrl
+        {
+            get { return site.BaseUrl; }
+        }
         public void Start()
         {
             log.Debug("Site Processor starting...");

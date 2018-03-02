@@ -1,8 +1,11 @@
 ﻿using Crawler.Business.Crawling;
 using Crawler.Business.Matching;
 using Crawler.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,31 +25,31 @@ namespace Crawler.Business
         }
         public void Start()
         {
-            if(isRunning)
+            if (isRunning)
             {
                 log.Warn("Engine is already started");
                 return;
             }
             isRunning = true;
-         
-                try
+            CheckJsonFile();
+            try
+            {
+                foreach (var site in context.Sites)
                 {
-                    foreach (var site in context.Sites)
-                    {
-                        log.Debug($"Creating processor for site {site.Name} || {site.BaseUrl}");
-                        var proc = new SiteProcessor(context, site);
-                        processors.Add(proc);
-                        proc.Start();
-                    }
+                    log.Debug($"Creating processor for site {site.Name} || {site.BaseUrl}");
+                    var proc = new SiteProcessor(context, site);
+                    processors.Add(proc);
+                    proc.Start();
                 }
-                catch(Exception ex)
-                {
-                    log.Fatal(ex.Message,ex);
-                }
+            }
+            catch (Exception ex)
+            {
+                log.Fatal(ex.Message, ex);
+            }
         }
         public void Stop()
         {
-            if(!isRunning)
+            if (!isRunning)
             {
                 log.Warn("Engine is already stopped");
                 return;
@@ -56,34 +59,66 @@ namespace Crawler.Business
                 proc.Stop();
         }
 
-        //public void AddNewSite(Site site)
-        //{
-        //    if (site == null)
-        //        throw new ArgumentNullException(nameof(site));
-        //    log.Debug("Adding New site");
-        //    if (context.Sites.FirstOrDefault(m => m.BaseUrl == site.BaseUrl) == null)
-        //    {
-        //        log.Debug("Adding Site to database");
-        //        context.Sites.Add(site);
-        //        context.SaveChanges();
-        //    }
-        //    else
-        //        context.Sites.Attach(site);
+        private  void CheckJsonFile()
+        {
+            if (!bool.Parse(ConfigurationManager.AppSettings["checkInputJson"]))
+                return;
+            var path = ConfigurationManager.AppSettings["jsonFile"];
+            if (string.IsNullOrEmpty(path))
+                return;
+            path = Path.GetFullPath(path);
+            if (!File.Exists(path))
+                return;
+            try
+            {
+                var sites = JsonConvert.DeserializeObject<List<Site>>(File.ReadAllText(path));
+                foreach (var site in sites)
+                    AddNewSite(site);
 
-        //    var agent = agents.Values.FirstOrDefault(m => m.GetBaseUrl() == site.BaseUrl);
-        //    if (agent == null)
-        //    {
-        //        log.Debug("no agent for site found in current dictionary. Creating new one");
-        //        agent = new CrawlerAgent();
-        //        agent.Init(context, this, site);
-        //        agents.Add(agent.GetId(), agent);
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message, ex);
+            }
 
-        //    }
-        //    else
-        //        log.Debug("agent for site found in current dictionary");
 
-        //    agent.Start();
-        //}
-       
+        }
+        public void AddNewSite(Site item)
+        {
+            if (item == null)
+                throw new ArgumentNullException(nameof(item));
+            log.Debug("Adding New site");
+            var site = context.Sites.FirstOrDefault(m =>m.Equals(item));
+            SiteProcessor proc = null;
+            if (site == null)
+            {
+                log.Debug("Site not found. Adding Site to database");
+                context.Sites.Add(item);
+                context.SaveChanges();
+                proc = new SiteProcessor(context, site);
+            }
+            else
+            {
+                log.Debug("Find site in database. checking for changes");
+                proc = processors.FirstOrDefault(m => m.GetBaseUrl == site.BaseUrl);
+                if(proc==null)
+                {
+                    log.Warn($"processor not found for site with id {site.Id}");
+                    log.Debug($"creating processor for site with id {site.Id}");
+                    proc = new SiteProcessor(context, site);
+                }
+                proc.Stop();
+                site.Categories.Clear();
+                foreach (var cat in item.Categories)
+                    site.Categories.Add(cat);
+                context.Entry(site).State = System.Data.Entity.EntityState.Modified;
+                context.SaveChanges();
+               
+
+            }
+            proc.Start();
+           
+        }
+
     }
 }

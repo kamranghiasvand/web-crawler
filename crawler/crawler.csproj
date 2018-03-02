@@ -66,6 +66,10 @@
       <HintPath>..\packages\MathNet.Numerics.3.20.1\lib\net40\MathNet.Numerics.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="NReco.PhantomJS, Version=1.0.4.0, Culture=neutral, PublicKeyToken=f160d8c5e2ae66b6, processorArchitecture=MSIL">
       <HintPath>..\packages\NReco.PhantomJS.1.0.4\lib\net40\NReco.PhantomJS.dll</HintPath>
       <Private>True</Private>
@@ -129,6 +133,14 @@
     <Compile Include="Migrations\201802191413076_7th.Designer.cs">
       <DependentUpon>201802191413076_7th.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201802251205331_8th.cs" />
+    <Compile Include="Migrations\201802251205331_8th.Designer.cs">
+      <DependentUpon>201802251205331_8th.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201803021930324_9th.cs" />
+    <Compile Include="Migrations\201803021930324_9th.Designer.cs">
+      <DependentUpon>201803021930324_9th.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Category.cs" />
     <Compile Include="Model\DynamicTypeBuilder.cs" />
@@ -148,6 +160,9 @@
       <SubType>Designer</SubType>
     </None>
     <Content Include="log4net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="input-file.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
@@ -173,6 +188,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201802191413076_7th.resx">
       <DependentUpon>201802191413076_7th.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802251205331_8th.resx">
+      <DependentUpon>201802251205331_8th.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803021930324_9th.resx">
+      <DependentUpon>201803021930324_9th.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
