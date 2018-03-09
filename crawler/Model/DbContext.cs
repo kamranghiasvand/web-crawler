@@ -14,5 +14,7 @@ namespace Crawler.Model
         }
         public DbSet<Site> Sites { get; set; }
         public DbSet<Filter> Filters { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Criteria> Criterias { get; set; }
     }
 }

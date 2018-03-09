@@ -13,7 +13,7 @@ namespace Crawler.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201801201114314_1st"; }
+            get { return "201803091255591_1st"; }
         }
         
         string IMigrationMetadata.Source

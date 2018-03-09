@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Crawler.Model
 {
-    public class Filter
+    public class Criteria
     {
         [JsonIgnore]
         public virtual Category Category { get; set; }
@@ -25,9 +25,9 @@ namespace Crawler.Model
                     otherType = obj.GetType().BaseType;
                 else
                     otherType = obj.GetType();
-            if (obj == null || typeof(Filter) != otherType)
+            if (obj == null || typeof(Criteria) != otherType)
                 return false;
-            var other = (Filter)obj;
+            var other = (Criteria)obj;
             if (!Name.Equals(other.Name))
                 return false;
             if (Location != other.Location)
@@ -42,11 +42,5 @@ namespace Crawler.Model
             return Selector.GetHashCode() + Name.GetHashCode();
         }
     }
-    public enum Location { Attribute, InnerText }
-    public enum ValueType
-    {
-        txt,
-        png,
-        jpg
-    }
+   
 }

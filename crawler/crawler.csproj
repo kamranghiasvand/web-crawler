@@ -105,46 +105,14 @@
     <Compile Include="Business\SiteProcessor.cs" />
     <Compile Include="Business\Storing\IStoreAgent.cs" />
     <Compile Include="Business\Storing\StoreAgent.cs" />
-    <Compile Include="Migrations\201801201114314_1st.cs" />
-    <Compile Include="Migrations\201801201114314_1st.Designer.cs">
-      <DependentUpon>201801201114314_1st.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201801231544494_2nd.cs" />
-    <Compile Include="Migrations\201801231544494_2nd.Designer.cs">
-      <DependentUpon>201801231544494_2nd.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201802111911379_3d.cs" />
-    <Compile Include="Migrations\201802111911379_3d.Designer.cs">
-      <DependentUpon>201802111911379_3d.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201802131610524_4th.cs" />
-    <Compile Include="Migrations\201802131610524_4th.Designer.cs">
-      <DependentUpon>201802131610524_4th.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201802162046363_5th.cs" />
-    <Compile Include="Migrations\201802162046363_5th.Designer.cs">
-      <DependentUpon>201802162046363_5th.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201802181425008_6th.cs" />
-    <Compile Include="Migrations\201802181425008_6th.Designer.cs">
-      <DependentUpon>201802181425008_6th.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201802191413076_7th.cs" />
-    <Compile Include="Migrations\201802191413076_7th.Designer.cs">
-      <DependentUpon>201802191413076_7th.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201802251205331_8th.cs" />
-    <Compile Include="Migrations\201802251205331_8th.Designer.cs">
-      <DependentUpon>201802251205331_8th.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201803021930324_9th.cs" />
-    <Compile Include="Migrations\201803021930324_9th.Designer.cs">
-      <DependentUpon>201803021930324_9th.cs</DependentUpon>
+    <Compile Include="Migrations\201803091255591_1st.cs" />
+    <Compile Include="Migrations\201803091255591_1st.Designer.cs">
+      <DependentUpon>201803091255591_1st.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Category.cs" />
+    <Compile Include="Model\Criteria.cs" />
     <Compile Include="Model\DynamicTypeBuilder.cs" />
-    <Compile Include="Model\JsonReader.cs" />
     <Compile Include="Model\Page.cs" />
     <Compile Include="Model\DbContext.cs" />
     <Compile Include="Model\Filter.cs" />
@@ -168,35 +136,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201801201114314_1st.resx">
-      <DependentUpon>201801201114314_1st.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201801231544494_2nd.resx">
-      <DependentUpon>201801231544494_2nd.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201802111911379_3d.resx">
-      <DependentUpon>201802111911379_3d.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201802131610524_4th.resx">
-      <DependentUpon>201802131610524_4th.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201802162046363_5th.resx">
-      <DependentUpon>201802162046363_5th.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201802181425008_6th.resx">
-      <DependentUpon>201802181425008_6th.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201802191413076_7th.resx">
-      <DependentUpon>201802191413076_7th.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201802251205331_8th.resx">
-      <DependentUpon>201802251205331_8th.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201803021930324_9th.resx">
-      <DependentUpon>201803021930324_9th.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="..\packages\PhantomJS.2.1.1\tools\phantomjs\phantomjs.exe">
       <Link>phantomjs.exe</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -205,7 +144,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201803091255591_1st.resx">
+      <DependentUpon>201803091255591_1st.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

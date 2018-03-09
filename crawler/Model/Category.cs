@@ -8,7 +8,7 @@ namespace Crawler.Model
 {
     public class Category
     {
-        public virtual ICollection<Filter> Criteria { get; set; } = new List<Filter>();
+        public virtual ICollection<Criteria> Criteria { get; set; } = new List<Criteria>();
         public virtual ICollection<Filter> Filters { get; set; } = new List<Filter>();
         [Key]
         public long Id { get; set; }
@@ -20,7 +20,13 @@ namespace Crawler.Model
         public virtual Site site { get; set; }
         public override bool Equals(object obj)
         {
-            if (obj == null || GetType() != obj.GetType())
+            var otherType = typeof(object);
+            if (obj != null)
+                if (obj.GetType().BaseType != null && obj.GetType().Namespace == "System.Data.Entity.DynamicProxies")
+                    otherType = obj.GetType().BaseType;
+                else
+                    otherType = obj.GetType();
+            if (obj == null || typeof(Category) != otherType)
                 return false;
             var other = (Category)obj;
             if (Filters.Count != other.Filters.Count)

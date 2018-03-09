@@ -17,7 +17,13 @@ namespace Crawler.Model
         public virtual ICollection<Page> Pages { get; set; } = new List<Page>();
         public override bool Equals(object obj)
         {
-            if (obj == null || obj.GetType() != GetType())
+            var otherType = typeof(object);
+            if (obj != null)
+                if (obj.GetType().BaseType != null && obj.GetType().Namespace == "System.Data.Entity.DynamicProxies")
+                    otherType = obj.GetType().BaseType;
+                else
+                    otherType = obj.GetType();
+            if (obj == null || otherType != typeof(Site))
                 return false;
             var other = (Site)obj;
             var otherUri = new Uri(other.BaseUrl);

@@ -59,7 +59,7 @@ namespace Crawler.Business
                 proc.Stop();
         }
 
-        private  void CheckJsonFile()
+        private void CheckJsonFile()
         {
             if (!bool.Parse(ConfigurationManager.AppSettings["checkInputJson"]))
                 return;
@@ -83,41 +83,41 @@ namespace Crawler.Business
 
 
         }
-        public void AddNewSite(Site item)
+        private void AddNewSite(Site item)
         {
             if (item == null)
                 throw new ArgumentNullException(nameof(item));
             log.Debug("Adding New site");
-            var site = context.Sites.FirstOrDefault(m =>m.Equals(item));
+            var site = context.Sites.AsEnumerable().FirstOrDefault(m => m.Equals(item));
             SiteProcessor proc = null;
             if (site == null)
             {
                 log.Debug("Site not found. Adding Site to database");
-                context.Sites.Add(item);
-                context.SaveChanges();
-                proc = new SiteProcessor(context, site);
+                site = new Site { BaseUrl = item.BaseUrl, Name = item.Name, OutputFolder = item.OutputFolder };
+                context.Sites.Add(site);
+                context.SaveChanges();           
             }
             else
-            {
                 log.Debug("Find site in database. checking for changes");
-                proc = processors.FirstOrDefault(m => m.GetBaseUrl == site.BaseUrl);
-                if(proc==null)
-                {
-                    log.Warn($"processor not found for site with id {site.Id}");
-                    log.Debug($"creating processor for site with id {site.Id}");
-                    proc = new SiteProcessor(context, site);
-                }
-                proc.Stop();
-                site.Categories.Clear();
-                foreach (var cat in item.Categories)
-                    site.Categories.Add(cat);
-                context.Entry(site).State = System.Data.Entity.EntityState.Modified;
-                context.SaveChanges();
-               
-
+            proc = processors.FirstOrDefault(m => m.GetBaseUrl == site.BaseUrl);           
+            proc?.Stop();       
+            foreach (var cat in site.Categories.AsEnumerable())
+            {
+                context.Filters.RemoveRange(cat.Filters.ToList());
+                context.Criterias.RemoveRange(cat.Criteria.ToList());
             }
-            proc.Start();
-           
+            context.SaveChanges();
+            context.Categories.RemoveRange(site.Categories.ToList());
+            context.SaveChanges();
+            site.Categories.Clear();
+            context.Entry(site).State = System.Data.Entity.EntityState.Modified;
+            context.SaveChanges();
+
+            foreach (var cat in item.Categories)
+                site.Categories.Add(cat);
+            context.Entry(site).State = System.Data.Entity.EntityState.Modified;
+            context.SaveChanges();
+
         }
 
     }

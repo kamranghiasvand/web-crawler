@@ -7,11 +7,6 @@ namespace Crawler.Model
 {
     public class DynamicTypeBuilder
     {
-        public static object CreateNewObject(string typeSignature, IDictionary<string, Type> fileds)
-        {
-            var myType = CompileResultType(typeSignature, fileds);
-            return Activator.CreateInstance(myType);
-        }
         public static Type CompileResultType(string typeSignature, IDictionary<string, Type> fileds)
         {
             var tb = GetTypeBuilder(typeSignature);
@@ -24,22 +19,10 @@ namespace Crawler.Model
             var objectType = tb.CreateType();
             return objectType;
         }
-
-        private static TypeBuilder GetTypeBuilder(string typeSignature)
+        public static object CreateNewObject(string typeSignature, IDictionary<string, Type> fileds)
         {
-            //var typeSignature = "MyDynamicType";
-            var an = new AssemblyName(typeSignature);
-            var assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(an, AssemblyBuilderAccess.Run);
-            var moduleBuilder = assemblyBuilder.DefineDynamicModule("MainModule");
-            var tb = moduleBuilder.DefineType(typeSignature,
-                    TypeAttributes.Public |
-                    TypeAttributes.Class |
-                    TypeAttributes.AutoClass |
-                    TypeAttributes.AnsiClass |
-                    TypeAttributes.BeforeFieldInit |
-                    TypeAttributes.AutoLayout,
-                    null);
-            return tb;
+            var myType = CompileResultType(typeSignature, fileds);
+            return Activator.CreateInstance(myType);
         }
 
         private static void CreateProperty(TypeBuilder tb, string propertyName, Type propertyType)
@@ -76,6 +59,23 @@ namespace Crawler.Model
 
             propertyBuilder.SetGetMethod(getPropMthdBldr);
             propertyBuilder.SetSetMethod(setPropMthdBldr);
+        }
+
+        private static TypeBuilder GetTypeBuilder(string typeSignature)
+        {
+            //var typeSignature = "MyDynamicType";
+            var an = new AssemblyName(typeSignature);
+            var assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(an, AssemblyBuilderAccess.Run);
+            var moduleBuilder = assemblyBuilder.DefineDynamicModule("MainModule");
+            var tb = moduleBuilder.DefineType(typeSignature,
+                    TypeAttributes.Public |
+                    TypeAttributes.Class |
+                    TypeAttributes.AutoClass |
+                    TypeAttributes.AnsiClass |
+                    TypeAttributes.BeforeFieldInit |
+                    TypeAttributes.AutoLayout,
+                    null);
+            return tb;
         }
 
     }

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Text;
 using Abot.Poco;
+using System.Linq;
 
 namespace Crawler.Business.Matching
 {
@@ -109,6 +110,7 @@ namespace Crawler.Business.Matching
                         return false;
                     }
                     var node = page.AngleSharpHtmlDocument.QuerySelector(cri.Selector);
+                  
                     if (node != null)
                     {
                         log.Debug("node found");
