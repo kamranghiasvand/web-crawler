@@ -1,6 +1,6 @@
 ﻿[
   {
-    "BaseUrl": "https://www.rocoland.com/%D8%A8%D8%B3%D8%AA%D9%86%DB%8C-%DA%A9%D8%B1%D9%87-%D8%A7%DB%8C-%D8%A8%D8%A7-%D8%AA%DA%A9%D9%87-%D9%87%D8%A7%DB%8C-%DA%AF%D8%B1%D8%AF%D9%88-650-%DA%AF%D8%B1%D9%85%DB%8C-%D9%81%D9%88%D8%B1%D8%AF%D9%88-%DA%A9%D8%A7%D9%84%D9%87",
+    "BaseUrl": "https://www.rocoland.com/%D8%B4%DB%8C%D8%B1-%DA%A9%D9%85-%DA%86%D8%B1%D8%A8-15-%DA%86%D8%B1%D8%A8%DB%8C-%D9%BE%D8%A7%DA%98%D9%86",
     "Categories": [
       {
         "Criteria": [
@@ -17,7 +17,7 @@
             "Selector": "body > div.master-wrapper-page > div.master-wrapper-content > div.breadcrumb > ul > li:nth-child(2) > span:nth-child(1) > a > span"
           },
           {
-            "ExpectedValue": "بستنی",
+            "ExpectedValue": "شیر",
             "Location": "InnerText",
             "Name": "span",
             "Selector": "body > div.master-wrapper-page > div.master-wrapper-content > div.breadcrumb > ul > li:nth-child(3) > span:nth-child(1) > a > span"
@@ -37,9 +37,51 @@
             "Name": "content",
             "OutName": "Price",
             "Type": "txt"
+          },
+          {
+            "Selector": "#product-details-form > div > div.product-essential > div.full-description",
+            "Location": "InnerText",
+            "Name": "content",
+            "OutName": "description",
+            "Type": "txt"
+          },
+          {
+            "Selector": "#product-details-form > div > div.product-collateral > div > div.table-wrapper > table > tbody > tr:nth-child(1) > td.spec-value",
+            "Location": "InnerText",
+            "Name": "td",
+            "OutName": "Type",
+            "Type": "txt"
+          },
+          {
+            "Selector": "#product-details-form > div > div.product-collateral > div > div.table-wrapper > table > tbody > tr:nth-child(2) > td.spec-value",
+            "Location": "InnerText",
+            "Name": "td",
+            "OutName": "Fat Level",
+            "Type": "txt"
+          },
+          {
+            "Selector": "#product-details-form > div > div.product-collateral > div > div.table-wrapper > table > tbody > tr:nth-child(3) > td.spec-value",
+            "Location": "InnerText",
+            "Name": "td",
+            "OutName": "Taste",
+            "Type": "txt"
+          },
+          {
+            "Selector": "#product-details-form > div > div.product-collateral > div > div.table-wrapper > table > tbody > tr:nth-child(4) > td.spec-value",
+            "Location": "InnerText",
+            "Name": "td",
+            "OutName": "Volume",
+            "Type": "txt"
+          },
+          {
+            "Selector": "#product-details-form > div > div.product-collateral > div > div.table-wrapper > table > tbody > tr:nth-child(5) > td.spec-value",
+            "Location": "InnerText",
+            "Name": "td",
+            "OutName": "Export",
+            "Type": "txt"
           }
         ],
-        "Name": "Rokoland_IceCream"
+        "Name": "Rokoland_Milk"
       }
     ],
     "Name": "Rocoland",
