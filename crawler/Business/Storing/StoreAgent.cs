@@ -46,7 +46,7 @@ namespace Crawler.Business.Storing
                             hasHeader = true;
                     }
                 }
-                writer = new StreamWriter(File.OpenWrite(path))
+                writer = new StreamWriter(File.OpenWrite(path),Encoding.UTF8)
                 {
                     AutoFlush = true
 
