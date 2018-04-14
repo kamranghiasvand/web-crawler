@@ -42,14 +42,14 @@ namespace Crawler.Business
             }
             isRunning = true;
             crawler = new CrawlerAgent();
-            crawler.Init(context, this, site);
+            crawler.Init(this, site.Id);
 
             matcher = new Matcher();
-            matcher.Init(context, crawler, this);
+            matcher.Init( crawler, this);
             foreach (var cat in site.Categories)
             {
                 var agent = new StoreAgent();
-                agent.Init(context, cat, site.OutputFolder);
+                agent.Init(cat.Id, site.OutputFolder);
                 storeAgents.Add(cat.Name, agent);
             }
             crawler.Start();

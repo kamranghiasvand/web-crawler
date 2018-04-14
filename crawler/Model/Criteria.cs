@@ -13,9 +13,7 @@ namespace Crawler.Model
         [JsonConverter(typeof(StringEnumConverter))]
         public Location Location { get; set; }
         public string Name { get; set; }
-        public string OutName { get; set; }
-        [JsonConverter(typeof(StringEnumConverter))]
-        public ValueType Type { get; set; }
+        public string ExpectedValue { get; set; }
         public string Selector { get; set; }
         public override bool Equals(object obj)
         {
@@ -30,6 +28,14 @@ namespace Crawler.Model
             var other = (Criteria)obj;
             if (!Name.Equals(other.Name))
                 return false;
+            if (ExpectedValue == null)
+            {
+                if (other.ExpectedValue != null)
+                    return false;
+            }
+            else
+            if (!ExpectedValue.Equals(other.ExpectedValue))
+                return false;
             if (Location != other.Location)
                 return false;
             if (!Selector.Equals(other.Selector))
@@ -39,8 +45,8 @@ namespace Crawler.Model
         }
         public override int GetHashCode()
         {
-            return Selector.GetHashCode() + Name.GetHashCode();
+            return Selector.GetHashCode() + ExpectedValue.GetHashCode();
         }
     }
-   
+
 }

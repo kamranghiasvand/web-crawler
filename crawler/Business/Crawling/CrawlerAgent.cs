@@ -14,15 +14,14 @@ namespace Crawler.Business.Crawling
     public class CrawlerAgent : ICrawlerAgent
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(CrawlerAgent));
-        private ApplicationDbContext dbContext;
-        private Site site;
+        private long siteId;
         private readonly string guid;
         private CrawlerX agent;
         private bool isRunning;
         private ICrawlerManager manager;
         private bool init;
 
-        public event Func<Site, Page, string, CrawledPage, Task> PageCrawled;
+        public event Func<long, long, string, CrawledPage, Task> PageCrawled;
 
         public CrawlerAgent()
         {
@@ -40,7 +39,13 @@ namespace Crawler.Business.Crawling
         {
             if (!init)
                 throw new AgetNotInitializedException();
-            return site.BaseUrl;
+            using (var dbContext = new ApplicationDbContext())
+            {
+                var site = dbContext.Sites.FirstOrDefault(m => m.Id == siteId);
+                if (site == null)
+                    throw new NullReferenceException($"site with id {siteId} not found");
+                return site.BaseUrl;
+            }
         }
         public void Start()
         {
@@ -64,7 +69,11 @@ namespace Crawler.Business.Crawling
                 (new Thread(() =>
                 {
                     log.Debug("Trying to start CrawlX");
-                    agent.Crawl(new Uri(site.BaseUrl));
+                    using (var dbContext = new ApplicationDbContext())
+                    {
+                        var site = dbContext.Sites.FirstOrDefault(m => m.Id == siteId);
+                        agent.Crawl(new Uri(site.BaseUrl));
+                    }
                     log.Info("Crawling is done");
                     lock (this) isRunning = false;
                     log.Debug("Calling manager");
@@ -93,17 +102,19 @@ namespace Crawler.Business.Crawling
             return isRunning;
         }
 
-        public void Init(ApplicationDbContext context, ICrawlerManager manager, Site site)
+        public void Init(ICrawlerManager manager, long siteId)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
-            if (site == null)
-                throw new ArgumentNullException(nameof(site));
-            dbContext = context;
             if (manager == null)
                 throw new AgetNotInitializedException();
             this.manager = manager;
-            this.site = site;
+            using (var dbContext = new ApplicationDbContext())
+            {
+                var site = dbContext.Sites.FirstOrDefault(m => m.Id == siteId);
+                if (site == null)
+                    throw new ArgumentNullException(nameof(siteId));
+                this.siteId = siteId;
+            }
+
             init = true;
             log.Info("CrawlerAgent initialized");
         }
@@ -119,83 +130,93 @@ namespace Crawler.Business.Crawling
         {
 
             log.Warn($"Page {e.CrawledPage.Uri} is Disallowed cause {e.DisallowedReason}");
-            var page = site.Pages.FirstOrDefault(item => item.Address == e.CrawledPage.Uri.ToString());
-            var sendNotification = false;
-            if (e.DisallowedReason == "Already Crawled")
-                sendNotification = true;
-            if (page == null)
+            using (var dbContext = new ApplicationDbContext())
             {
-                log.Debug("Page not found in DB. Creating new page");
-                site.Pages.Add(new Page { Address = e.CrawledPage.Uri.ToString(), IsSuccess = false, SeeTime = DateTime.Now, Text = "" });
-            }
-            else
-            {
-                page.IsSuccess = false;
-                page.SeeTime = DateTime.Now;
-                dbContext.Entry(page).State = EntityState.Modified;
-            }
-            lock (this)
-            {
+                var sendNotification = false;
+                var site = dbContext.Sites.FirstOrDefault(m => m.Id == siteId);
+                var page = site.Pages.FirstOrDefault(item => item.Address == e.CrawledPage.Uri.ToString());
+
+                if (e.DisallowedReason == "Already Crawled")
+                    sendNotification = true;
+                if (page == null)
+                {
+                    log.Debug("Page not found in DB. Creating new page");
+                    site.Pages.Add(new Page { Address = e.CrawledPage.Uri.ToString(), IsSuccess = false, SeeTime = DateTime.Now, Text = "" });
+                }
+                else
+                {
+                    page.IsSuccess = false;
+                    page.SeeTime = DateTime.Now;
+                    dbContext.Entry(page).State = EntityState.Modified;
+                }
                 dbContext.SaveChanges();
+                if (sendNotification)
+                    CallPageCrawledEvent(site.Id, page.Id, e.CrawledPage);
             }
-            if (sendNotification)
-                CallPageCrawledEvent(site, page,e.CrawledPage);
+
 
         }
         private void Agent_PageCrawlCompleted(object sender, PageCrawlCompletedArgs e)
-        {          
-            log.Info($"Page {e.CrawledPage.Uri} crawled.");        
+        {
+            log.Info($"Page {e.CrawledPage.Uri} crawled.");
             var crawledPage = e.CrawledPage;
-            var page = site.Pages.FirstOrDefault(item => item.Address == e.CrawledPage.Uri.ToString());
-            var find = false;
-            if (page == null)
+            using (var dbContext = new ApplicationDbContext())
             {
-                log.Info("Page not found in DB. Creating new page");
-                page = new Page
+                var site = dbContext.Sites.FirstOrDefault(m => m.Id == siteId);
+                var page = site.Pages.FirstOrDefault(item => item.Address == e.CrawledPage.Uri.ToString());
+                var find = false;
+                if (page == null)
                 {
-                    Address = e.CrawledPage.Uri.ToString(),
-                    IsSuccess = false,
-                    Text = ""
-                };
-            }
-            else
-            {
-                log.Info($"Page found in Db with id {page.Id}");
-                find = true;
-            }
-            page.SeeTime = DateTime.Now;
-            if (crawledPage.WebException != null || crawledPage.HttpWebResponse.StatusCode != HttpStatusCode.OK)
-            {
-                page.IsSuccess = false;
-                log.Warn($"Crawl of page failed {crawledPage.Uri}: " + crawledPage.HttpWebResponse.StatusCode, crawledPage.WebException);
-            }
-            else
-            {
-                log.Info($"Crawl of page succeeded {crawledPage.Uri}");
-                page.IsSuccess = true;
-                if (string.IsNullOrEmpty(crawledPage.Content.Text))
-                    log.Warn($"Page had no content {crawledPage.Uri.AbsoluteUri}");
+                    log.Info("Page not found in DB. Creating new page");
+                    page = new Page
+                    {
+                        Address = e.CrawledPage.Uri.ToString(),
+                        IsSuccess = false,
+                        Text = ""
+                    };
+                }
                 else
-                    page.Text = crawledPage.Content.Text;
-            }
-            lock (this)
-            {
+                {
+                    log.Info($"Page found in Db with id {page.Id}");
+                    find = true;
+                }
+                page.SeeTime = DateTime.Now;
+                if (crawledPage.WebException != null || crawledPage.HttpWebResponse.StatusCode != HttpStatusCode.OK)
+                {
+                    page.IsSuccess = false;
+                    log.Warn($"Crawl of page failed {crawledPage.Uri}: " + crawledPage.HttpWebResponse.StatusCode, crawledPage.WebException);
+                }
+                else
+                {
+                    log.Info($"Crawl of page succeeded {crawledPage.Uri}");
+                    page.IsSuccess = true;
+                    if (string.IsNullOrEmpty(crawledPage.Content.Text))
+                        log.Warn($"Page had no content {crawledPage.Uri.AbsoluteUri}");
+                    else
+                        page.Text = crawledPage.Content.Text;
+                }
+
                 if (find)
                     dbContext.Entry(page).State = EntityState.Modified;
                 else
                     site.Pages.Add(page);
                 dbContext.SaveChanges();
+                CallPageCrawledEvent(site.Id, page.Id, crawledPage);
             }
-            CallPageCrawledEvent(site, page,crawledPage);
         }
-        private void CallPageCrawledEvent(Site site, Page page,CrawledPage crawledPage)
+        private void CallPageCrawledEvent(long siteId, long pageId, CrawledPage crawledPage)
         {
-            if (!string.IsNullOrEmpty(page.Text))
+            using (var context = new ApplicationDbContext())
             {
-                log.Debug("Invoking PageCrawled event");
-                (new Thread(() => {PageCrawled?.Invoke(site, page, page.Text,crawledPage); })).Start();
+                var site = context.Sites.FirstOrDefault(m => m.Id == siteId);
+                var page = site.Pages.FirstOrDefault(m => m.Id == pageId);
+                if (!string.IsNullOrEmpty(page.Text))
+                {
+                    log.Debug("Invoking PageCrawled event");
+                    (new Thread(() => { PageCrawled?.Invoke(site.Id, page.Id, page.Text, crawledPage); })).Start();
+                }
             }
         }
-
+        
     }
 }

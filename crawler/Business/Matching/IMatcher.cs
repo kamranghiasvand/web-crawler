@@ -10,7 +10,7 @@ namespace Crawler.Business.Matching
 {
     public interface IMatcher
     {
-        void Init(ApplicationDbContext context, ICrawlerAgent agent,IMatcherManager manager);
+        void Init(ICrawlerAgent agent,IMatcherManager manager);
         string GetId();
     }
     [Serializable]

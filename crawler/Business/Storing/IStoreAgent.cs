@@ -9,7 +9,7 @@ namespace Crawler.Business.Storing
 {
     public interface IStoreAgent
     {
-        void Init(ApplicationDbContext context, Category category, string basePath);
+        void Init(long categoryId, string basePath);
         void Store(Dictionary<string, string> record);
         void Close();
     }

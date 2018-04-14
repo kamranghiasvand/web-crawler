@@ -10,13 +10,13 @@ namespace Crawler.Business.Crawling
 {
     public interface ICrawlerAgent
     {
-        void Init(ApplicationDbContext context, ICrawlerManager manager, Site site);
+        void Init(ICrawlerManager manager, long siteId);
         void Start();
         void Stop();
         string GetId();
         bool IsRunning();
         string GetBaseUrl();
-        event Func<Site,Page,string, CrawledPage,Task> PageCrawled;
+        event Func<long,long,string, CrawledPage,Task> PageCrawled;
     }
     [Serializable]
     public class AgetNotInitializedException : Exception {

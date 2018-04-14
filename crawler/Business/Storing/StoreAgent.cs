@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Crawler.Model;
 using System.IO;
 using System.Text;
+using System.Linq;
 
 namespace Crawler.Business.Storing
 {
@@ -11,52 +12,50 @@ namespace Crawler.Business.Storing
 
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(StoreAgent));
         string basePath;
-        Category category;
-        ApplicationDbContext context;
         List<string> headers = new List<string>();
         private StreamWriter writer;
         bool init;
 
-        public void Init(ApplicationDbContext context, Category category, string basePath)
+        public void Init(long categoryId, string basePath)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
-            if (category == null)
-                throw new ArgumentNullException(nameof(category));
-            if (string.IsNullOrEmpty(basePath))
-                throw new ArgumentNullException(nameof(basePath));
-            if (!Directory.Exists(basePath))
+            using (var cnx = new ApplicationDbContext())
             {
-                Directory.CreateDirectory(basePath);
-            }
-            this.context = context;
-            this.category = category;
-            this.basePath = basePath;
-            if (category.Filters == null || category.Filters.Count == 0)
-                throw new StoreNotInitializedException("Category has no filters");
-            foreach (var item in category.Filters)
-                headers.Add(item.OutName);
-            if (!(basePath.EndsWith("/") || basePath.EndsWith("\\")))
-                basePath += "/";
-            var path = basePath + category.Name + ".csv";
-            var hasHeader = false;
-            if (File.Exists(path))
-            {
-                using (var streamReader = new StreamReader(path))
+                var category = cnx.Categories.FirstOrDefault(m => m.Id == categoryId);
+                if (category == null)
+                    throw new ArgumentNullException(nameof(category));
+                if (string.IsNullOrEmpty(basePath))
+                    throw new ArgumentNullException(nameof(basePath));
+                if (!Directory.Exists(basePath))
                 {
-                    if (!string.IsNullOrEmpty(streamReader.ReadLine()))
-                        hasHeader = true;
+                    Directory.CreateDirectory(basePath);
                 }
-            }
-            writer = new StreamWriter(File.OpenWrite(path))
-            {
-                AutoFlush = true
+                this.basePath = basePath;
+                if (category.Filters == null || category.Filters.Count == 0)
+                    throw new StoreNotInitializedException("Category has no filters");
+                foreach (var item in category.Filters)
+                    headers.Add(item.OutName);
+                if (!(basePath.EndsWith("/") || basePath.EndsWith("\\")))
+                    basePath += "/";
+                var path = basePath + category.Name + ".csv";
+                var hasHeader = false;
+                if (File.Exists(path))
+                {
+                    using (var streamReader = new StreamReader(path))
+                    {
+                        if (!string.IsNullOrEmpty(streamReader.ReadLine()))
+                            hasHeader = true;
+                    }
+                }
+                writer = new StreamWriter(File.OpenWrite(path))
+                {
+                    AutoFlush = true
 
-            };
-            writer.BaseStream.Seek(0, SeekOrigin.End);
-            if (!hasHeader)
-                WriteRow(headers);
-            init = true;
+                };
+                writer.BaseStream.Seek(0, SeekOrigin.End);
+                if (!hasHeader)
+                    WriteRow(headers);
+                init = true;
+            }
         }
 
         public void Store(Dictionary<string, string> record)
