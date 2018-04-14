@@ -96,8 +96,8 @@ namespace Crawler.Business.Storing
         public void Close()
         {
             writer.Flush();
-            writer.Close();
-            writer.Dispose();
+          //  writer.Close();
+          //  writer.Dispose();
         }
     }
 }

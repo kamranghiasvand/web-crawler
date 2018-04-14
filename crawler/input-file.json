@@ -1,31 +1,46 @@
 ﻿[
   {
-    "BaseUrl": "http://www.rocoland.com/",
+    "BaseUrl": "https://www.rocoland.com/%D8%A8%D8%B3%D8%AA%D9%86%DB%8C-%DA%A9%D8%B1%D9%87-%D8%A7%DB%8C-%D8%A8%D8%A7-%D8%AA%DA%A9%D9%87-%D9%87%D8%A7%DB%8C-%DA%AF%D8%B1%D8%AF%D9%88-650-%DA%AF%D8%B1%D9%85%DB%8C-%D9%81%D9%88%D8%B1%D8%AF%D9%88-%DA%A9%D8%A7%D9%84%D9%87",
     "Categories": [
-             
       {
         "Criteria": [
           {
+            "ExpectedValue": "خانه",
             "Location": "InnerText",
-            "Name": "a",
-            "ExpectedValue": "کالاهای اساسی",
-            "Selector": "body > div.master-wrapper-page > div.header-menu > ul:nth-child(1) > li:nth-child(1) > a"
-            
+            "Name": "span",
+            "Selector": "body > div.master-wrapper-page > div.master-wrapper-content > div.breadcrumb > ul > li:nth-child(1) > span:nth-child(1) > a > span"
+          },
+          {
+            "ExpectedValue": "لبنیات",
+            "Location": "InnerText",
+            "Name": "span",
+            "Selector": "body > div.master-wrapper-page > div.master-wrapper-content > div.breadcrumb > ul > li:nth-child(2) > span:nth-child(1) > a > span"
+          },
+          {
+            "ExpectedValue": "بستنی",
+            "Location": "InnerText",
+            "Name": "span",
+            "Selector": "body > div.master-wrapper-page > div.master-wrapper-content > div.breadcrumb > ul > li:nth-child(3) > span:nth-child(1) > a > span"
           }
         ],
         "Filters": [
           {
             "Location": "InnerText",
-            "Name": "a",
+            "Name": "h1",
             "OutName": "Title",
-            "Selector": "body > div.master-wrapper-page > div.header-menu > ul:nth-child(1) > li:nth-child(1) > a",
+            "Selector": "#product-details-form > div > div.product-essential > div.overview > div.product-name > h1",
+            "Type": "txt"
+          },
+          {
+            "Selector": "#product-details-form > div > div.product-essential > div.overview > div.prices > div.product-price > span",
+            "Location": "Attribute",
+            "Name": "content",
+            "OutName": "Price",
             "Type": "txt"
           }
         ],
-        "Name": "Rokoland_Base"
+        "Name": "Rokoland_IceCream"
       }
-
-
     ],
     "Name": "Rocoland",
     "OutputFolder": "D:\\Projects\\web-crawler\\crawler\\bin\\Debug/rocoland"

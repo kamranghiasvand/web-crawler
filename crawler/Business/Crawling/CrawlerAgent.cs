@@ -64,6 +64,7 @@ namespace Crawler.Business.Crawling
                 agent = new CrawlerX();
                 agent.PageCrawlCompleted += Agent_PageCrawlCompleted;
                 agent.PageLinksCrawlDisallowed += Agent_PageLinksCrawlDisallowed;
+                
                 //agent.ShouldCrawlPage(ShouldCrawlPage);
 
                 (new Thread(() =>
@@ -73,11 +74,12 @@ namespace Crawler.Business.Crawling
                     {
                         var site = dbContext.Sites.FirstOrDefault(m => m.Id == siteId);
                         agent.Crawl(new Uri(site.BaseUrl));
+
+                        log.Info("Crawling is done");
+                        lock (this) isRunning = false;
+                        log.Debug("Calling manager");
+                        manager.Done(this);
                     }
-                    log.Info("Crawling is done");
-                    lock (this) isRunning = false;
-                    log.Debug("Calling manager");
-                    manager.Done(this);
 
                 })).Start();
             }
