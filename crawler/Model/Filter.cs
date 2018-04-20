@@ -46,7 +46,6 @@ namespace Crawler.Model
     public enum ValueType
     {
         txt,
-        png,
-        jpg
+        jpeg
     }
 }
