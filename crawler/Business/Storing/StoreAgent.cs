@@ -30,14 +30,14 @@ namespace Crawler.Business.Storing
                 {
                     Directory.CreateDirectory(basePath);
 
-                }
-                this.basePath = basePath;
+                }               
                 if (category.Filters == null || category.Filters.Count == 0)
                     throw new StoreNotInitializedException("Category has no filters");
                 foreach (var item in category.Filters)
                     headers.Add(new HeaderType { headerName = item.OutName, Type = item.Type });
                 if (!(basePath.EndsWith("/") || basePath.EndsWith("\\")))
                     basePath += "/";
+                this.basePath = basePath;
                 if (!Directory.Exists(basePath + "Images/"))
                     Directory.CreateDirectory(basePath + "Images/");
                 var path = basePath + category.Name + ".csv";

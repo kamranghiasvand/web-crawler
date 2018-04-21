@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 
 namespace Crawler
@@ -20,6 +21,12 @@ namespace Crawler
         static void Main(string[] args)
         {
             var log = log4net.LogManager.GetLogger(typeof(Program));
+            //log.Debug("Asda");
+            //log.Debug("شسیشسی");
+            //Console.WriteLine("کالرشسی");
+            //Console.ReadKey();
+            //return;
+        
             log.Debug("Starting Application");         
             var context = new ApplicationDbContext();           
             var engine = new Engine(context);

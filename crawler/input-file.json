@@ -79,6 +79,13 @@
             "Name": "td",
             "OutName": "Export",
             "Type": "txt"
+          },
+          {
+            "Location": "Attribute",
+            "Name": "src",
+            "OutName": "Image",
+            "Selector": "#product-details-form > div > div.product-essential > div.gallery > div.picture> img",
+            "Type": "jpeg"
           }
         ],
         "Name": "Rokoland_Milk"
