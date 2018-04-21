@@ -1,97 +1,102 @@
 ﻿[
   {
-    "BaseUrl": "https://www.rocoland.com/%D8%B4%DB%8C%D8%B1-%DA%A9%D9%85-%DA%86%D8%B1%D8%A8-15-%DA%86%D8%B1%D8%A8%DB%8C-%D9%BE%D8%A7%DA%98%D9%86",
+    "BaseUrl": "https://www.shahrvand.ir/fa/product/%D9%85%D9%88%D8%A7%D8%AF-%D8%BA%D8%B0%D8%A7%DB%8C%DB%8C/%D9%84%D8%A8%D9%86%DB%8C%D8%A7%D8%AA/%D8%B4%DB%8C%D8%B1/7685-%D8%B4%DB%8C%D8%B1-%D8%B3%D9%87-%DA%AF%D9%88%D8%B4-200-%D9%85%DB%8C%D9%84%DB%8C%E2%80%8C%D9%84%DB%8C%D8%AA%D8%B1%DB%8C-%D9%BE%D8%A7%DA%A9.html",
     "Categories": [
       {
         "Criteria": [
           {
-            "ExpectedValue": "خانه",
+            "ExpectedValue": "صفحه اصلی",
             "Location": "InnerText",
-            "Name": "span",
-            "Selector": "body > div.master-wrapper-page > div.master-wrapper-content > div.breadcrumb > ul > li:nth-child(1) > span:nth-child(1) > a > span"
+            "Name": "a",
+            "Selector": "#wrapper > section > div > div > div > ul > li:nth-child(1) > a"
+          },
+          {
+            "ExpectedValue": "محصولات",
+            "Location": "InnerText",
+            "Name": "a",
+            "Selector": "#wrapper > section > div > div > div > ul > li:nth-child(2) > a"
+          },
+          {
+            "ExpectedValue": "مواد غذایی",
+            "Location": "InnerText",
+            "Name": "a",
+            "Selector": "#wrapper > section > div > div > div > ul > li:nth-child(3) > a"
           },
           {
             "ExpectedValue": "لبنیات",
             "Location": "InnerText",
-            "Name": "span",
-            "Selector": "body > div.master-wrapper-page > div.master-wrapper-content > div.breadcrumb > ul > li:nth-child(2) > span:nth-child(1) > a > span"
+            "Name": "a",
+            "Selector": "#wrapper > section.container-fluid.site_map > div > div > div > ul > li:nth-child(4) > a"
           },
           {
             "ExpectedValue": "شیر",
             "Location": "InnerText",
-            "Name": "span",
-            "Selector": "body > div.master-wrapper-page > div.master-wrapper-content > div.breadcrumb > ul > li:nth-child(3) > span:nth-child(1) > a > span"
+            "Name": "a",
+            "Selector": "#wrapper > section.container-fluid.site_map > div > div > div > ul > li:nth-child(5) > a"
           }
         ],
         "Filters": [
           {
             "Location": "InnerText",
             "Name": "h1",
-            "OutName": "Title",
-            "Selector": "#product-details-form > div > div.product-essential > div.overview > div.product-name > h1",
+            "OutName": "title",
+            "Selector": "#single_page_center > div > div.title > h1",
             "Type": "txt"
           },
           {
-            "Selector": "#product-details-form > div > div.product-essential > div.overview > div.prices > div.product-price > span",
-            "Location": "Attribute",
-            "Name": "content",
-            "OutName": "Price",
+		  "Location": "InnerText",
+		  "Name": "li",
+		  "OutName": "Price",
+            "Selector": "#single_page_center > div > div.row > div.col-xs-6.col-sm-6.col-md-5.col-lg-5.full_size > div.right_area_bottom.priceshow > ul > li.price_row1",
             "Type": "txt"
           },
           {
-            "Selector": "#product-details-form > div > div.product-essential > div.full-description",
-            "Location": "InnerText",
-            "Name": "content",
-            "OutName": "description",
+		  "Location": "InnerText",
+		  "Name": "a",
+		  "OutName": "Brand",
+            "Selector": "#single_page_center > div > div.row > div.col-xs-6.col-sm-6.col-md-6.col-md-offset-1.col-lg-5.col-lg-offset-2.full_size > div > div.description > ul > li:nth-child(1) > a",
             "Type": "txt"
           },
           {
-            "Selector": "#product-details-form > div > div.product-collateral > div > div.table-wrapper > table > tbody > tr:nth-child(1) > td.spec-value",
-            "Location": "InnerText",
-            "Name": "td",
-            "OutName": "Type",
+		  "Location": "InnerText",
+		  "Name": "li",
+		  "OutName": "نوع",
+            "Selector": "#single_page_center > div > div.row > div.col-xs-6.col-sm-6.col-md-6.col-md-offset-1.col-lg-5.col-lg-offset-2.full_size > div > div.description > ul > li:nth-child(2)",
             "Type": "txt"
           },
           {
-            "Selector": "#product-details-form > div > div.product-collateral > div > div.table-wrapper > table > tbody > tr:nth-child(2) > td.spec-value",
-            "Location": "InnerText",
-            "Name": "td",
-            "OutName": "Fat Level",
+		  "Location": "InnerText",
+		  "Name": "li",
+		  "OutName": "حجم",
+            "Selector": "#single_page_center > div > div.row > div.col-xs-6.col-sm-6.col-md-6.col-md-offset-1.col-lg-5.col-lg-offset-2.full_size > div > div.description > ul > li:nth-child(3)",
             "Type": "txt"
           },
           {
-            "Selector": "#product-details-form > div > div.product-collateral > div > div.table-wrapper > table > tbody > tr:nth-child(3) > td.spec-value",
-            "Location": "InnerText",
-            "Name": "td",
-            "OutName": "Taste",
+		  "Location": "InnerText",
+		  "Name": "li",
+		  "OutName": "طعم",
+            "Selector": "#single_page_center > div > div.row > div.col-xs-6.col-sm-6.col-md-6.col-md-offset-1.col-lg-5.col-lg-offset-2.full_size > div > div.description > ul > li:nth-child(4)",
             "Type": "txt"
           },
           {
-            "Selector": "#product-details-form > div > div.product-collateral > div > div.table-wrapper > table > tbody > tr:nth-child(4) > td.spec-value",
-            "Location": "InnerText",
-            "Name": "td",
-            "OutName": "Volume",
-            "Type": "txt"
-          },
-          {
-            "Selector": "#product-details-form > div > div.product-collateral > div > div.table-wrapper > table > tbody > tr:nth-child(5) > td.spec-value",
-            "Location": "InnerText",
-            "Name": "td",
-            "OutName": "Export",
+		  "Location": "InnerText",
+		  "Name": "p",
+		  "OutName": "شرایط نگهداری",
+            "Selector": "#single_tab2 > article > div > div > div > ul > li:nth-child(2) > p",
             "Type": "txt"
           },
           {
             "Location": "Attribute",
             "Name": "src",
             "OutName": "Image",
-            "Selector": "#product-details-form > div > div.product-essential > div.gallery > div.picture> img",
+            "Selector": "#single_page_right > div > div > div.single_slideshow_big > div > img",
             "Type": "jpeg"
           }
         ],
-        "Name": "Rokoland_Milk"
+        "Name": "shahrvand_Milk"
       }
     ],
-    "Name": "Rocoland",
-    "OutputFolder": "D:\\Projects\\web-crawler\\crawler\\bin\\Debug/rocoland"
+    "Name": "shahrvand",
+    "OutputFolder": "D:\\Projects\\web-crawler\\crawler\\bin\\Debug/shahrvand"
   }
 ]

@@ -186,7 +186,7 @@ namespace Crawler.Business.Crawling
                 if (crawledPage.WebException != null || crawledPage.HttpWebResponse.StatusCode != HttpStatusCode.OK)
                 {
                     page.IsSuccess = false;
-                    log.Warn($"Crawl of page failed {crawledPage.Uri}: " + crawledPage.HttpWebResponse.StatusCode, crawledPage.WebException);
+                    log.Warn($"Crawl of page failed {crawledPage.Uri}: " + crawledPage.HttpWebResponse?.StatusCode, crawledPage.WebException);
                 }
                 else
                 {
