@@ -16,6 +16,7 @@ namespace Crawler.Business.Matching
     public class Matcher : IMatcher
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(Matcher));
+        static readonly Regex trimmer = new Regex(@"\s\s+");
         private ICrawlerAgent agent;
         private IMatcherManager manager;
         private bool init;
@@ -190,31 +191,35 @@ namespace Crawler.Business.Matching
         }
         private static string GetValue(IElement node, Filter filter)
         {
-            string result=null;
+            string result = null;
             if (node != null)
             {
                 log.Debug("node found");
                 if (filter.Location == Location.Attribute)
                 {
                     var attr = node.Attributes[filter.Name];
+                    result = attr.Value;
+                    result = Trim(result);
                     if (filter.ValueRegex != null)
                     {
-                        var res = Regex.Match(attr.Value, filter.ValueRegex);
+                        var res = Regex.Match(result, filter.ValueRegex);
                         result = res.Value;
                     }
                     else
                         result = attr.Value;
-                   
+
                 }
                 else if (filter.Location == Location.InnerText)
                 {
+                    result = node.InnerHtml;
+                    result = Trim(result);
                     if (filter.ValueRegex != null)
                     {
-                        var res = Regex.Match(node.InnerHtml, filter.ValueRegex);
+                        var res = Regex.Match(result, filter.ValueRegex);
                         result = res.Value;
                     }
                     else
-                        result = node.InnerHtml;                   
+                        result = node.InnerHtml;
                 }
                 log.Debug($"Found value  [{result}] for filter with id {filter.Id}");
                 return result;
@@ -224,6 +229,15 @@ namespace Crawler.Business.Matching
                 log.Debug($"node not found");
                 return null;
             }
+        }
+        private static string Trim(string value)
+        {
+            if (value == null)
+                return null;
+            value = value.Replace('\r', ' ').Replace('\n', ' ').Replace('\t', ' ').Trim();
+            value = trimmer.Replace(value, " ");
+            return value;
+
         }
         private static void AddIdToCategoriesList(Page page, long catId)
         {
