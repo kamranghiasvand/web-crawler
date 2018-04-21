@@ -26,7 +26,7 @@ namespace Crawler
             //Console.WriteLine("کالرشسی");
             //Console.ReadKey();
             //return;
-        
+
             log.Debug("Starting Application");         
             var context = new ApplicationDbContext();           
             var engine = new Engine(context);

@@ -113,6 +113,10 @@
     <Compile Include="Migrations\201804141249266_2nd.Designer.cs">
       <DependentUpon>201804141249266_2nd.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201804211559174_3rd.cs" />
+    <Compile Include="Migrations\201804211559174_3rd.Designer.cs">
+      <DependentUpon>201804211559174_3rd.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Category.cs" />
     <Compile Include="Model\Criteria.cs" />
@@ -154,6 +158,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201804141249266_2nd.resx">
       <DependentUpon>201804141249266_2nd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804211559174_3rd.resx">
+      <DependentUpon>201804211559174_3rd.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

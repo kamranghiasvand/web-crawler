@@ -8,10 +8,12 @@ using System.Threading;
 using System.Text;
 using Abot.Poco;
 using System.Linq;
+using AngleSharp.Dom;
+using System.Text.RegularExpressions;
 
 namespace Crawler.Business.Matching
 {
-    public class Matcher : IMatcher, IDisposable
+    public class Matcher : IMatcher
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(Matcher));
         private ICrawlerAgent agent;
@@ -175,25 +177,8 @@ namespace Crawler.Business.Matching
                             continue;
                         }
                         var node = page.AngleSharpHtmlDocument.QuerySelector(filter.Selector);
-                        if (node != null)
-                        {
-                            log.Debug("node found");
-                            if (filter.Location == Location.Attribute)
-                            {
-                                var attr = node.Attributes[filter.Name];
-                                log.Debug($"Found value  [{attr.Value}] for filter with id {filter.Id}");
-                                record.Add(filter.OutName, attr.Value);
-                            }
-                            else if (filter.Location == Location.InnerText)
-                            {
-                                log.Debug($"Found value  [{node.InnerHtml}]  for filter with id {filter.Id}");
-                                record.Add(filter.OutName, node.InnerHtml);
-                            }
-                        }
-                        else
-                        {
-                            log.Debug($"node not found");
-                        }
+                        if (GetValue(node, filter) != null)
+                            record.Add(filter.OutName, node.InnerHtml);
                     }
                     catch (Exception ex)
                     {
@@ -202,6 +187,43 @@ namespace Crawler.Business.Matching
                 }
             }
             return record;
+        }
+        private static string GetValue(IElement node, Filter filter)
+        {
+            string result=null;
+            if (node != null)
+            {
+                log.Debug("node found");
+                if (filter.Location == Location.Attribute)
+                {
+                    var attr = node.Attributes[filter.Name];
+                    if (filter.ValueRegex != null)
+                    {
+                        var res = Regex.Match(attr.Value, filter.ValueRegex);
+                        result = res.Value;
+                    }
+                    else
+                        result = attr.Value;
+                   
+                }
+                else if (filter.Location == Location.InnerText)
+                {
+                    if (filter.ValueRegex != null)
+                    {
+                        var res = Regex.Match(node.InnerHtml, filter.ValueRegex);
+                        result = res.Value;
+                    }
+                    else
+                        result = node.InnerHtml;                   
+                }
+                log.Debug($"Found value  [{result}] for filter with id {filter.Id}");
+                return result;
+            }
+            else
+            {
+                log.Debug($"node not found");
+                return null;
+            }
         }
         private static void AddIdToCategoriesList(Page page, long catId)
         {
@@ -243,9 +265,6 @@ namespace Crawler.Business.Matching
 
         }
 
-        public void Dispose()
-        {
 
-        }
     }
 }

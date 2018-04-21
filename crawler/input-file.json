@@ -44,44 +44,44 @@
             "Type": "txt"
           },
           {
-		  "Location": "InnerText",
-		  "Name": "li",
-		  "OutName": "Price",
+            "Location": "InnerText",
+            "Name": "li",
+            "OutName": "Price",
             "Selector": "#single_page_center > div > div.row > div.col-xs-6.col-sm-6.col-md-5.col-lg-5.full_size > div.right_area_bottom.priceshow > ul > li.price_row1",
             "Type": "txt"
           },
           {
-		  "Location": "InnerText",
-		  "Name": "a",
-		  "OutName": "Brand",
+            "Location": "InnerText",
+            "Name": "a",
+            "OutName": "Brand",
             "Selector": "#single_page_center > div > div.row > div.col-xs-6.col-sm-6.col-md-6.col-md-offset-1.col-lg-5.col-lg-offset-2.full_size > div > div.description > ul > li:nth-child(1) > a",
             "Type": "txt"
           },
           {
-		  "Location": "InnerText",
-		  "Name": "li",
-		  "OutName": "نوع",
+            "Location": "InnerText",
+            "Name": "li",
+            "OutName": "نوع",
             "Selector": "#single_page_center > div > div.row > div.col-xs-6.col-sm-6.col-md-6.col-md-offset-1.col-lg-5.col-lg-offset-2.full_size > div > div.description > ul > li:nth-child(2)",
             "Type": "txt"
           },
           {
-		  "Location": "InnerText",
-		  "Name": "li",
-		  "OutName": "حجم",
+            "Location": "InnerText",
+            "Name": "li",
+            "OutName": "حجم",
             "Selector": "#single_page_center > div > div.row > div.col-xs-6.col-sm-6.col-md-6.col-md-offset-1.col-lg-5.col-lg-offset-2.full_size > div > div.description > ul > li:nth-child(3)",
             "Type": "txt"
           },
           {
-		  "Location": "InnerText",
-		  "Name": "li",
-		  "OutName": "طعم",
+            "Location": "InnerText",
+            "Name": "li",
+            "OutName": "طعم",
             "Selector": "#single_page_center > div > div.row > div.col-xs-6.col-sm-6.col-md-6.col-md-offset-1.col-lg-5.col-lg-offset-2.full_size > div > div.description > ul > li:nth-child(4)",
             "Type": "txt"
           },
           {
-		  "Location": "InnerText",
-		  "Name": "p",
-		  "OutName": "شرایط نگهداری",
+            "Location": "InnerText",
+            "Name": "p",
+            "OutName": "شرایط نگهداری",
             "Selector": "#single_tab2 > article > div > div > div > ul > li:nth-child(2) > p",
             "Type": "txt"
           },

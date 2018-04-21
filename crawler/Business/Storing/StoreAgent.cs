@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace Crawler.Business.Storing
 {
@@ -14,6 +15,7 @@ namespace Crawler.Business.Storing
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(StoreAgent));
         string basePath;
         List<HeaderType> headers = new List<HeaderType>();
+        static readonly Regex trimmer = new Regex(@"\s\s+");
         private StreamWriter writer;
         bool init;
 
@@ -29,8 +31,7 @@ namespace Crawler.Business.Storing
                 if (!Directory.Exists(basePath))
                 {
                     Directory.CreateDirectory(basePath);
-
-                }               
+                }
                 if (category.Filters == null || category.Filters.Count == 0)
                     throw new StoreNotInitializedException("Category has no filters");
                 foreach (var item in category.Filters)
@@ -50,14 +51,14 @@ namespace Crawler.Business.Storing
                             hasHeader = true;
                     }
                 }
-                writer = new StreamWriter(File.OpenWrite(path),Encoding.UTF8)
+                writer = new StreamWriter(File.OpenWrite(path), Encoding.UTF8)
                 {
                     AutoFlush = true
 
                 };
                 writer.BaseStream.Seek(0, SeekOrigin.End);
                 if (!hasHeader)
-                    WriteRow(headers.Select(m=>m.headerName).ToList());
+                    WriteRow(headers.Select(m => m.headerName).ToList());
                 init = true;
             }
         }
@@ -74,14 +75,15 @@ namespace Crawler.Business.Storing
                 {
                     if (field.Type == Model.ValueType.txt)
                     {
-                        value = value.Replace('\r', ' ').Replace('\n', ' ');
+                        value = value.Replace('\r', ' ').Replace('\n', ' ').Replace('\t', ' ').Trim();
+                        value = trimmer.Replace(value, " ");
                         row.Add(value);
                     }
                     else if (field.Type == Model.ValueType.jpeg)
                     {
-                        var name = Path.GetRandomFileName()+".jpeg";
+                        var name = Path.GetRandomFileName() + ".jpeg";
                         SaveImage(value, basePath + "Images/", name);
-                        row.Add(basePath + "Images/"+ name);
+                        row.Add(basePath + "Images/" + name);
 
                     }
                 }
@@ -95,7 +97,7 @@ namespace Crawler.Business.Storing
         {
             using (WebClient client = new WebClient())
             {
-                client.DownloadFile(new Uri(url), directory+name);
+                client.DownloadFile(new Uri(url), directory + name);
             }
         }
         private void WriteRow(List<string> row)
@@ -118,8 +120,8 @@ namespace Crawler.Business.Storing
         public void Close()
         {
             writer.Flush();
-          //  writer.Close();
-          //  writer.Dispose();
+            //  writer.Close();
+            //  writer.Dispose();
         }
     }
     public class HeaderType

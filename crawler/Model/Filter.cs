@@ -17,6 +17,7 @@ namespace Crawler.Model
         [JsonConverter(typeof(StringEnumConverter))]
         public ValueType Type { get; set; }
         public string Selector { get; set; }
+        public string ValueRegex { get; set; }
         public override bool Equals(object obj)
         {
             var otherType = typeof(object);
