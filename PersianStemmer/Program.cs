@@ -8,13 +8,13 @@ namespace PersianStemmer
 {
     class Program
     {
-        static void Main(string[] args)
-        {
-            var ps = new Stemmer();
-            Console.WriteLine(ps.run("بوییدمت"));
-            Console.WriteLine(ps.run("پدران"));
+        //static void Main(string[] args)
+        //{
+        //    var ps = new Stemmer();
+        //    Console.WriteLine(ps.run("بوییدمت"));
+        //    Console.WriteLine(ps.run("پدران"));
 
-            Console.ReadKey();
-        }
+        //    Console.ReadKey();
+        //}
     }
 }

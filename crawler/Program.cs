@@ -20,17 +20,13 @@ namespace Crawler
 
         static void Main(string[] args)
         {
+           
             var log = log4net.LogManager.GetLogger(typeof(Program));
-            //log.Debug("Asda");
-            //log.Debug("شسیشسی");
-            //Console.WriteLine("کالرشسی");
-            //Console.ReadKey();
-            //return;
-
-            log.Debug("Starting Application");         
-            var context = new ApplicationDbContext();           
+           
+            log.Debug("Starting Application");
+            var context = new ApplicationDbContext();
             var engine = new Engine(context);
-            engine.Start();         
+            engine.Start();
             Console.ReadKey();
         }
     }

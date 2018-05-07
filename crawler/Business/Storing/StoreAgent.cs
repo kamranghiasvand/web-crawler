@@ -6,6 +6,7 @@ using System.Text;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using Stemming.Persian;
 
 namespace Crawler.Business.Storing
 {
@@ -17,6 +18,7 @@ namespace Crawler.Business.Storing
         List<HeaderType> headers = new List<HeaderType>();
         static readonly Regex trimmer = new Regex(@"\s\s+");
         private StreamWriter writer;
+        private static Stemmer stemmer = new Stemmer("Stemming\\data\\");
         bool init;
 
         public void Init(long categoryId, string basePath)
@@ -77,7 +79,7 @@ namespace Crawler.Business.Storing
                     {
                         value = value.Replace('\r', ' ').Replace('\n', ' ').Replace('\t', ' ').Trim();
                         value = trimmer.Replace(value, " ");
-                        row.Add(value);
+                        row.Add(StemmLine(value));
                     }
                     else if (field.Type == Model.ValueType.jpeg)
                     {
@@ -92,7 +94,13 @@ namespace Crawler.Business.Storing
             }
             WriteRow(row);
         }
-
+        public static String StemmLine(string line)
+        {
+            var builder = new StringBuilder();
+            foreach (var word in line.Split(' '))
+                builder.Append(stemmer.run(word) + ' ');
+            return builder.ToString();
+        }
         private static void SaveImage(string url, string directory, string name)
         {
             using (WebClient client = new WebClient())

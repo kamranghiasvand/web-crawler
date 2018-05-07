@@ -2,7 +2,6 @@
 using Crawler.Business.Crawling;
 using Crawler.Model;
 using System.Threading.Tasks;
-using HtmlAgilityPack;
 using System.Collections.Generic;
 using System.Threading;
 using System.Text;
@@ -21,6 +20,7 @@ namespace Crawler.Business.Matching
         private IMatcherManager manager;
         private bool init;
         private readonly string guid;
+       
         public Matcher()
         {
             guid = Guid.NewGuid().ToString();
