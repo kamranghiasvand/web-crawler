@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "crawler", "crawler\crawler.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersianStemmer", "PersianStemmer\PersianStemmer.csproj", "{04C2E7C2-A6A1-47AE-8CD8-D513A26FA7B1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductGenerator", "ProductGenerator\ProductGenerator.csproj", "{2EBEC1A0-E604-435D-8B30-2DE03F341471}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{04C2E7C2-A6A1-47AE-8CD8-D513A26FA7B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04C2E7C2-A6A1-47AE-8CD8-D513A26FA7B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04C2E7C2-A6A1-47AE-8CD8-D513A26FA7B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EBEC1A0-E604-435D-8B30-2DE03F341471}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EBEC1A0-E604-435D-8B30-2DE03F341471}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EBEC1A0-E604-435D-8B30-2DE03F341471}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EBEC1A0-E604-435D-8B30-2DE03F341471}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

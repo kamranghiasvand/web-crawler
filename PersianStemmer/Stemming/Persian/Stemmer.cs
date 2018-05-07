@@ -36,7 +36,7 @@ namespace Stemming.Persian
         private static  bool enableCache = true;
         private static  bool enableVerb = true;
 
-        public Stemmer(string sBase = "data\\") {
+        public Stemmer(string sBase = "Stemming\\data\\") {
             dataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, sBase); 
             try {
                 loadRule();
